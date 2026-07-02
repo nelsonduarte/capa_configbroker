@@ -1,0 +1,6 @@
+# ConfigBroker fetch manifest
+# one "NAME<TAB>URL" line per secret to fetch from the upstream allowlist
+# URL host must be the single allowlisted host (config.internal.example)
+DB_PASSWORD	http://config.internal.example/secrets/DB_PASSWORD
+API_TOKEN	http://config.internal.example/secrets/API_TOKEN
+SIGNING_KEY	http://config.internal.example/secrets/SIGNING_KEY

@@ -1,0 +1,7 @@
+# ConfigBroker local vault fixture (reproducible offline stand-in)
+# NAME<TAB>VALUE; these are FICTITIOUS secrets used only so the run is
+# deterministic without a live upstream. Real deployments fetch these
+# from the allowlisted upstream and never commit them.
+DB_PASSWORD	pg-s3cr3t-9f2a7c14b8e0
+API_TOKEN	tok_live_4Kd9Qm2Xr7Lp0Zc
+SIGNING_KEY	ed25519-priv-a91f33c7d2e5b40817

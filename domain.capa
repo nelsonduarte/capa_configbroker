@@ -1,0 +1,73 @@
+// domain.capa
+//
+// The shared data vocabulary for ConfigBroker. Pure data plus small
+// total helpers; zero capabilities, no I/O. Every other module imports
+// this so the security labels stay consistent end to end.
+//
+// The whole information-flow story starts here, in one type annotation.
+// A resolved secret carries two fields:
+//
+//   * name:  the config key it belongs to (DB_PASSWORD, API_TOKEN, ...).
+//     This is NON-secret: it is the slot name, safe to log and audit.
+//
+//   * value: the secret material fetched from the upstream vault. This
+//     is @secret. From that single annotation the compiler propagates a
+//     confidentiality label through every value derived from it and
+//     proves it cannot reach a public sink (a log line, the audit file,
+//     a telemetry POST, the console) without crossing an audited
+//     declassify.
+//
+// The design is that split: the KEY is public, the VALUE is secret. The
+// audit log is built exclusively from public data (keys, counts, source
+// provenance); the only secret-derived material that reaches an output
+// file is the resolved value written into its authorised config slot,
+// produced at the single audited bridge in resolve.capa.
+
+// =========================================================
+// A resolved secret (post-fetch, in-memory form)
+// =========================================================
+//
+// Marking ``value`` @secret puts every value read from it into the
+// secret domain (field reads inherit the annotation). ``name`` is the
+// public slot key; ``source`` records where the value came from
+// (upstream host or local vault fallback) and is public provenance for
+// the audit log.
+
+pub type ResolvedSecret {
+    name: String,             // the config slot key - public
+    value: @secret String,    // the fetched secret material - never in the clear
+    source: String            // "upstream" | "vault-fallback" - public provenance
+}
+
+// A single line of the config template: a slot that must be filled from
+// a named secret. ``key`` is the output slot; ``secret_name`` is which
+// fetched secret fills it. Both public: the template says WHICH secret
+// goes WHERE, never the secret itself.
+pub type Slot {
+    key: String,          // output config key, e.g. DATABASE_URL_PASSWORD
+    secret_name: String   // which fetched secret fills it, e.g. DB_PASSWORD
+}
+
+// =========================================================
+// Fetch / resolution error channel
+// =========================================================
+//
+// The broker threads Result across every fallible step. A missing
+// secret or a malformed manifest is a typed, explainable error, never a
+// crash. The error messages are built from PUBLIC data only (keys,
+// hosts, indices); a secret value never appears in a ConfigError.
+
+pub type ConfigError =
+    MissingSecret(String)     // manifest asked for a secret the vault has not
+    UnknownSlotSecret(String) // template slot names a secret not in the manifest
+    MalformedManifest(Int)    // manifest line N is not "NAME<TAB>URL"
+    EmptyManifest
+    Io(String)
+
+pub fun config_error_message(e: ConfigError) -> String
+    return match e
+        MissingSecret(name)     -> "secret '${name}' was neither fetched upstream nor present in the local vault"
+        UnknownSlotSecret(name) -> "config template references secret '${name}', which the manifest does not fetch"
+        MalformedManifest(idx)  -> "manifest line ${idx} is malformed (want 'NAME<TAB>URL')"
+        EmptyManifest           -> "the fetch manifest has no entries"
+        Io(msg)                 -> "I/O error: ${msg}"

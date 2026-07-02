@@ -1,0 +1,24 @@
+// capa_hash.tables
+//
+// Hex encoding. The lowercase digest rendering every public function
+// shares: each byte becomes two hex characters, high nibble first.
+// The digit table is read with `char_at` on a literal String (no
+// secret indices: digests are public), so the output is byte-
+// identical on both backends.
+
+const HEX_DIGITS: String = "0123456789abcdef"
+
+/// One lowercase hex character for a nibble in 0..15.
+fun hex_digit(nibble: Int) -> String
+    return match HEX_DIGITS.char_at(nibble)
+        Some(ch) -> ch
+        None     -> "?"
+
+/// Encode a byte list as a lowercase hex String, two chars per byte.
+pub fun to_hex(bytes: List<Int>) -> String
+    var out = ""
+    for byte in bytes
+        let hi = (byte >> 4) & 0xF
+        let lo = byte & 0xF
+        out = "${out}${hex_digit(hi)}${hex_digit(lo)}"
+    return out

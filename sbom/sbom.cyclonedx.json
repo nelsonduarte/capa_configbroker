@@ -1,0 +1,3258 @@
+{
+  "bomFormat": "CycloneDX",
+  "specVersion": "1.5",
+  "serialNumber": "urn:uuid:61e2242a-4640-577a-91d6-89c6869d0e4d",
+  "version": 1,
+  "metadata": {
+    "timestamp": "2026-01-01T00:00:00Z",
+    "tools": {
+      "components": [
+        {
+          "type": "application",
+          "name": "capa",
+          "version": "1.13.0"
+        }
+      ]
+    },
+    "component": {
+      "bom-ref": "capa:program:configbroker.capa",
+      "type": "application",
+      "name": "configbroker.capa",
+      "version": "1.13.0",
+      "supplier": {
+        "name": "capa-build"
+      },
+      "licenses": []
+    },
+    "properties": [
+      {
+        "name": "capa:schema_version",
+        "value": "1"
+      },
+      {
+        "name": "capa:summary:total_functions",
+        "value": "37"
+      },
+      {
+        "name": "capa:summary:functions_with_capabilities",
+        "value": "6"
+      },
+      {
+        "name": "capa:summary:functions_with_attributes",
+        "value": "5"
+      },
+      {
+        "name": "capa:summary:functions_crossing_unsafe",
+        "value": "0"
+      }
+    ]
+  },
+  "components": [
+    {
+      "bom-ref": "capa:builtin:configbroker.capa:Fs",
+      "type": "library",
+      "name": "Fs",
+      "scope": "required",
+      "supplier": {
+        "name": "capa-build"
+      },
+      "licenses": [],
+      "properties": [
+        {
+          "name": "capa:kind",
+          "value": "builtin-capability"
+        }
+      ]
+    },
+    {
+      "bom-ref": "capa:builtin:configbroker.capa:Net",
+      "type": "library",
+      "name": "Net",
+      "scope": "required",
+      "supplier": {
+        "name": "capa-build"
+      },
+      "licenses": [],
+      "properties": [
+        {
+          "name": "capa:kind",
+          "value": "builtin-capability"
+        }
+      ]
+    },
+    {
+      "bom-ref": "capa:builtin:configbroker.capa:Stdio",
+      "type": "library",
+      "name": "Stdio",
+      "scope": "required",
+      "supplier": {
+        "name": "capa-build"
+      },
+      "licenses": [],
+      "properties": [
+        {
+          "name": "capa:kind",
+          "value": "builtin-capability"
+        }
+      ]
+    },
+    {
+      "bom-ref": "capa:fn:configbroker.capa:config_error_message",
+      "type": "library",
+      "name": "config_error_message",
+      "scope": "required",
+      "supplier": {
+        "name": "capa-build"
+      },
+      "licenses": [],
+      "properties": [
+        {
+          "name": "capa:kind",
+          "value": "function"
+        },
+        {
+          "name": "capa:pos",
+          "value": "domain.capa:67:5"
+        },
+        {
+          "name": "capa:return_type",
+          "value": "String"
+        },
+        {
+          "name": "capa:has_unsafe",
+          "value": "false"
+        },
+        {
+          "name": "capa:is_pub",
+          "value": "true"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Clock"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Db"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Env"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Fs"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Net"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Proc"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Random"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Stdio"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Unsafe"
+        },
+        {
+          "name": "capa:param",
+          "value": "e: ConfigError"
+        }
+      ]
+    },
+    {
+      "bom-ref": "capa:fn:configbroker.capa:_capa_m2__is_comment",
+      "type": "library",
+      "name": "is_comment",
+      "scope": "required",
+      "supplier": {
+        "name": "capa-build"
+      },
+      "licenses": [],
+      "properties": [
+        {
+          "name": "capa:kind",
+          "value": "function"
+        },
+        {
+          "name": "capa:pos",
+          "value": "parse.capa:31:1"
+        },
+        {
+          "name": "capa:return_type",
+          "value": "Bool"
+        },
+        {
+          "name": "capa:has_unsafe",
+          "value": "false"
+        },
+        {
+          "name": "capa:is_pub",
+          "value": "false"
+        },
+        {
+          "name": "capa:source_module_index",
+          "value": "2"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Clock"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Db"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Env"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Fs"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Net"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Proc"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Random"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Stdio"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Unsafe"
+        },
+        {
+          "name": "capa:param",
+          "value": "line: String"
+        }
+      ]
+    },
+    {
+      "bom-ref": "capa:fn:configbroker.capa:parse_manifest",
+      "type": "library",
+      "name": "parse_manifest",
+      "scope": "required",
+      "supplier": {
+        "name": "capa-build"
+      },
+      "licenses": [],
+      "properties": [
+        {
+          "name": "capa:kind",
+          "value": "function"
+        },
+        {
+          "name": "capa:pos",
+          "value": "parse.capa:39:5"
+        },
+        {
+          "name": "capa:return_type",
+          "value": "Result<List<FetchEntry>, ConfigError>"
+        },
+        {
+          "name": "capa:has_unsafe",
+          "value": "false"
+        },
+        {
+          "name": "capa:is_pub",
+          "value": "true"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Clock"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Db"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Env"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Fs"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Net"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Proc"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Random"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Stdio"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Unsafe"
+        },
+        {
+          "name": "capa:param",
+          "value": "text: String"
+        }
+      ]
+    },
+    {
+      "bom-ref": "capa:fn:configbroker.capa:parse_template",
+      "type": "library",
+      "name": "parse_template",
+      "scope": "required",
+      "supplier": {
+        "name": "capa-build"
+      },
+      "licenses": [],
+      "properties": [
+        {
+          "name": "capa:kind",
+          "value": "function"
+        },
+        {
+          "name": "capa:pos",
+          "value": "parse.capa:66:5"
+        },
+        {
+          "name": "capa:return_type",
+          "value": "Result<List<Slot>, ConfigError>"
+        },
+        {
+          "name": "capa:has_unsafe",
+          "value": "false"
+        },
+        {
+          "name": "capa:is_pub",
+          "value": "true"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Clock"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Db"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Env"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Fs"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Net"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Proc"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Random"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Stdio"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Unsafe"
+        },
+        {
+          "name": "capa:param",
+          "value": "text: String"
+        }
+      ]
+    },
+    {
+      "bom-ref": "capa:fn:configbroker.capa:vault_lookup",
+      "type": "library",
+      "name": "vault_lookup",
+      "scope": "required",
+      "supplier": {
+        "name": "capa-build"
+      },
+      "licenses": [],
+      "properties": [
+        {
+          "name": "capa:kind",
+          "value": "function"
+        },
+        {
+          "name": "capa:pos",
+          "value": "parse.capa:93:5"
+        },
+        {
+          "name": "capa:return_type",
+          "value": "String"
+        },
+        {
+          "name": "capa:has_unsafe",
+          "value": "false"
+        },
+        {
+          "name": "capa:is_pub",
+          "value": "true"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Clock"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Db"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Env"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Fs"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Net"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Proc"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Random"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Stdio"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Unsafe"
+        },
+        {
+          "name": "capa:param",
+          "value": "vault_text: String"
+        },
+        {
+          "name": "capa:param",
+          "value": "name: String"
+        }
+      ]
+    },
+    {
+      "bom-ref": "capa:fn:configbroker.capa:fetch_db_password",
+      "type": "library",
+      "name": "fetch_db_password",
+      "scope": "required",
+      "supplier": {
+        "name": "capa-build"
+      },
+      "licenses": [],
+      "properties": [
+        {
+          "name": "capa:kind",
+          "value": "function"
+        },
+        {
+          "name": "capa:pos",
+          "value": "fetch.capa:40:5"
+        },
+        {
+          "name": "capa:return_type",
+          "value": "ResolvedSecret"
+        },
+        {
+          "name": "capa:has_unsafe",
+          "value": "false"
+        },
+        {
+          "name": "capa:is_pub",
+          "value": "true"
+        },
+        {
+          "name": "capa:declared_capability",
+          "value": "Net"
+        },
+        {
+          "name": "capa:transitively_reachable_capability",
+          "value": "Net"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Clock"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Db"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Env"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Fs"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Proc"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Random"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Stdio"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Unsafe"
+        },
+        {
+          "name": "capa:param",
+          "value": "net: Net [cap]"
+        },
+        {
+          "name": "capa:param",
+          "value": "vault_text: String"
+        }
+      ]
+    },
+    {
+      "bom-ref": "capa:fn:configbroker.capa:fetch_api_token",
+      "type": "library",
+      "name": "fetch_api_token",
+      "scope": "required",
+      "supplier": {
+        "name": "capa-build"
+      },
+      "licenses": [],
+      "properties": [
+        {
+          "name": "capa:kind",
+          "value": "function"
+        },
+        {
+          "name": "capa:pos",
+          "value": "fetch.capa:50:5"
+        },
+        {
+          "name": "capa:return_type",
+          "value": "ResolvedSecret"
+        },
+        {
+          "name": "capa:has_unsafe",
+          "value": "false"
+        },
+        {
+          "name": "capa:is_pub",
+          "value": "true"
+        },
+        {
+          "name": "capa:declared_capability",
+          "value": "Net"
+        },
+        {
+          "name": "capa:transitively_reachable_capability",
+          "value": "Net"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Clock"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Db"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Env"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Fs"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Proc"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Random"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Stdio"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Unsafe"
+        },
+        {
+          "name": "capa:param",
+          "value": "net: Net [cap]"
+        },
+        {
+          "name": "capa:param",
+          "value": "vault_text: String"
+        }
+      ]
+    },
+    {
+      "bom-ref": "capa:fn:configbroker.capa:fetch_signing_key",
+      "type": "library",
+      "name": "fetch_signing_key",
+      "scope": "required",
+      "supplier": {
+        "name": "capa-build"
+      },
+      "licenses": [],
+      "properties": [
+        {
+          "name": "capa:kind",
+          "value": "function"
+        },
+        {
+          "name": "capa:pos",
+          "value": "fetch.capa:60:5"
+        },
+        {
+          "name": "capa:return_type",
+          "value": "ResolvedSecret"
+        },
+        {
+          "name": "capa:has_unsafe",
+          "value": "false"
+        },
+        {
+          "name": "capa:is_pub",
+          "value": "true"
+        },
+        {
+          "name": "capa:declared_capability",
+          "value": "Net"
+        },
+        {
+          "name": "capa:transitively_reachable_capability",
+          "value": "Net"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Clock"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Db"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Env"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Fs"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Proc"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Random"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Stdio"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Unsafe"
+        },
+        {
+          "name": "capa:param",
+          "value": "net: Net [cap]"
+        },
+        {
+          "name": "capa:param",
+          "value": "vault_text: String"
+        }
+      ]
+    },
+    {
+      "bom-ref": "capa:fn:configbroker.capa:resolve_all",
+      "type": "library",
+      "name": "resolve_all",
+      "scope": "required",
+      "supplier": {
+        "name": "capa-build"
+      },
+      "licenses": [],
+      "properties": [
+        {
+          "name": "capa:kind",
+          "value": "function"
+        },
+        {
+          "name": "capa:pos",
+          "value": "fetch.capa:77:5"
+        },
+        {
+          "name": "capa:return_type",
+          "value": "Result<List<ResolvedSecret>, ConfigError>"
+        },
+        {
+          "name": "capa:has_unsafe",
+          "value": "false"
+        },
+        {
+          "name": "capa:is_pub",
+          "value": "true"
+        },
+        {
+          "name": "capa:declared_capability",
+          "value": "Net"
+        },
+        {
+          "name": "capa:transitively_reachable_capability",
+          "value": "Net"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Clock"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Db"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Env"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Fs"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Proc"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Random"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Stdio"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Unsafe"
+        },
+        {
+          "name": "capa:param",
+          "value": "net: Net [cap]"
+        },
+        {
+          "name": "capa:param",
+          "value": "vault_text: String"
+        },
+        {
+          "name": "capa:param",
+          "value": "entries: List<FetchEntry>"
+        }
+      ]
+    },
+    {
+      "bom-ref": "capa:fn:configbroker.capa:_capa_m4__find_value",
+      "type": "library",
+      "name": "find_value",
+      "scope": "required",
+      "supplier": {
+        "name": "capa-build"
+      },
+      "licenses": [],
+      "properties": [
+        {
+          "name": "capa:kind",
+          "value": "function"
+        },
+        {
+          "name": "capa:pos",
+          "value": "resolve.capa:29:1"
+        },
+        {
+          "name": "capa:return_type",
+          "value": "Option<ResolvedSecret>"
+        },
+        {
+          "name": "capa:has_unsafe",
+          "value": "false"
+        },
+        {
+          "name": "capa:is_pub",
+          "value": "false"
+        },
+        {
+          "name": "capa:source_module_index",
+          "value": "4"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Clock"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Db"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Env"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Fs"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Net"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Proc"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Random"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Stdio"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Unsafe"
+        },
+        {
+          "name": "capa:param",
+          "value": "secrets: List<ResolvedSecret>"
+        },
+        {
+          "name": "capa:param",
+          "value": "name: String"
+        }
+      ]
+    },
+    {
+      "bom-ref": "capa:fn:configbroker.capa:_capa_m4__render_slot",
+      "type": "library",
+      "name": "render_slot",
+      "scope": "required",
+      "supplier": {
+        "name": "capa-build"
+      },
+      "licenses": [],
+      "properties": [
+        {
+          "name": "capa:kind",
+          "value": "function"
+        },
+        {
+          "name": "capa:pos",
+          "value": "resolve.capa:40:1"
+        },
+        {
+          "name": "capa:return_type",
+          "value": "String"
+        },
+        {
+          "name": "capa:has_unsafe",
+          "value": "false"
+        },
+        {
+          "name": "capa:is_pub",
+          "value": "false"
+        },
+        {
+          "name": "capa:source_module_index",
+          "value": "4"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Clock"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Db"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Env"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Fs"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Net"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Proc"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Random"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Stdio"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Unsafe"
+        },
+        {
+          "name": "capa:param",
+          "value": "slot_key: String"
+        },
+        {
+          "name": "capa:param",
+          "value": "s: ResolvedSecret"
+        }
+      ]
+    },
+    {
+      "bom-ref": "capa:fn:configbroker.capa:resolve_config",
+      "type": "library",
+      "name": "resolve_config",
+      "scope": "required",
+      "supplier": {
+        "name": "capa-build"
+      },
+      "licenses": [],
+      "properties": [
+        {
+          "name": "capa:kind",
+          "value": "function"
+        },
+        {
+          "name": "capa:pos",
+          "value": "resolve.capa:55:5"
+        },
+        {
+          "name": "capa:return_type",
+          "value": "Result<String, ConfigError>"
+        },
+        {
+          "name": "capa:has_unsafe",
+          "value": "false"
+        },
+        {
+          "name": "capa:is_pub",
+          "value": "true"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Clock"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Db"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Env"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Fs"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Net"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Proc"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Random"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Stdio"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Unsafe"
+        },
+        {
+          "name": "capa:param",
+          "value": "slots: List<Slot>"
+        },
+        {
+          "name": "capa:param",
+          "value": "secrets: List<ResolvedSecret>"
+        }
+      ]
+    },
+    {
+      "bom-ref": "capa:fn:configbroker.capa:_capa_m7__hex_digit",
+      "type": "library",
+      "name": "hex_digit",
+      "scope": "required",
+      "supplier": {
+        "name": "capa-build"
+      },
+      "licenses": [],
+      "properties": [
+        {
+          "name": "capa:kind",
+          "value": "function"
+        },
+        {
+          "name": "capa:pos",
+          "value": "vendor/capa_hash/tables.capa:12:1"
+        },
+        {
+          "name": "capa:return_type",
+          "value": "String"
+        },
+        {
+          "name": "capa:has_unsafe",
+          "value": "false"
+        },
+        {
+          "name": "capa:is_pub",
+          "value": "false"
+        },
+        {
+          "name": "capa:source_module_index",
+          "value": "7"
+        },
+        {
+          "name": "capa:doc",
+          "value": "One lowercase hex character for a nibble in 0..15."
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Clock"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Db"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Env"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Fs"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Net"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Proc"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Random"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Stdio"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Unsafe"
+        },
+        {
+          "name": "capa:param",
+          "value": "nibble: Int"
+        }
+      ]
+    },
+    {
+      "bom-ref": "capa:fn:configbroker.capa:to_hex",
+      "type": "library",
+      "name": "to_hex",
+      "scope": "required",
+      "supplier": {
+        "name": "capa-build"
+      },
+      "licenses": [],
+      "properties": [
+        {
+          "name": "capa:kind",
+          "value": "function"
+        },
+        {
+          "name": "capa:pos",
+          "value": "vendor/capa_hash/tables.capa:18:5"
+        },
+        {
+          "name": "capa:return_type",
+          "value": "String"
+        },
+        {
+          "name": "capa:has_unsafe",
+          "value": "false"
+        },
+        {
+          "name": "capa:is_pub",
+          "value": "true"
+        },
+        {
+          "name": "capa:doc",
+          "value": "Encode a byte list as a lowercase hex String, two chars per byte."
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Clock"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Db"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Env"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Fs"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Net"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Proc"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Random"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Stdio"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Unsafe"
+        },
+        {
+          "name": "capa:param",
+          "value": "bytes: List<Int>"
+        }
+      ]
+    },
+    {
+      "bom-ref": "capa:fn:configbroker.capa:_capa_m6__rotr32",
+      "type": "library",
+      "name": "rotr32",
+      "scope": "required",
+      "supplier": {
+        "name": "capa-build"
+      },
+      "licenses": [],
+      "properties": [
+        {
+          "name": "capa:kind",
+          "value": "function"
+        },
+        {
+          "name": "capa:pos",
+          "value": "vendor/capa_hash/sha256.capa:28:1"
+        },
+        {
+          "name": "capa:return_type",
+          "value": "Int"
+        },
+        {
+          "name": "capa:has_unsafe",
+          "value": "false"
+        },
+        {
+          "name": "capa:is_pub",
+          "value": "false"
+        },
+        {
+          "name": "capa:source_module_index",
+          "value": "6"
+        },
+        {
+          "name": "capa:doc",
+          "value": "Rotate a 32-bit word right by `n` bits. `x` is assumed already\nmasked to 32 bits; `(x << (32 - n))` can reach 2^63 only if x had\nhigh bits, so the whole expression is re-masked to 32 bits."
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Clock"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Db"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Env"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Fs"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Net"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Proc"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Random"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Stdio"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Unsafe"
+        },
+        {
+          "name": "capa:param",
+          "value": "x: Int"
+        },
+        {
+          "name": "capa:param",
+          "value": "n: Int"
+        },
+        {
+          "name": "capa:attribute:constant_time",
+          "value": ""
+        }
+      ]
+    },
+    {
+      "bom-ref": "capa:fn:configbroker.capa:_capa_m6__shr32",
+      "type": "library",
+      "name": "shr32",
+      "scope": "required",
+      "supplier": {
+        "name": "capa-build"
+      },
+      "licenses": [],
+      "properties": [
+        {
+          "name": "capa:kind",
+          "value": "function"
+        },
+        {
+          "name": "capa:pos",
+          "value": "vendor/capa_hash/sha256.capa:33:1"
+        },
+        {
+          "name": "capa:return_type",
+          "value": "Int"
+        },
+        {
+          "name": "capa:has_unsafe",
+          "value": "false"
+        },
+        {
+          "name": "capa:is_pub",
+          "value": "false"
+        },
+        {
+          "name": "capa:source_module_index",
+          "value": "6"
+        },
+        {
+          "name": "capa:doc",
+          "value": "Logical right shift of an already-masked 32-bit word."
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Clock"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Db"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Env"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Fs"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Net"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Proc"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Random"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Stdio"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Unsafe"
+        },
+        {
+          "name": "capa:param",
+          "value": "x: Int"
+        },
+        {
+          "name": "capa:param",
+          "value": "n: Int"
+        },
+        {
+          "name": "capa:attribute:constant_time",
+          "value": ""
+        }
+      ]
+    },
+    {
+      "bom-ref": "capa:fn:configbroker.capa:_capa_m6__round_constants",
+      "type": "library",
+      "name": "round_constants",
+      "scope": "required",
+      "supplier": {
+        "name": "capa-build"
+      },
+      "licenses": [],
+      "properties": [
+        {
+          "name": "capa:kind",
+          "value": "function"
+        },
+        {
+          "name": "capa:pos",
+          "value": "vendor/capa_hash/sha256.capa:39:1"
+        },
+        {
+          "name": "capa:return_type",
+          "value": "List<Int>"
+        },
+        {
+          "name": "capa:has_unsafe",
+          "value": "false"
+        },
+        {
+          "name": "capa:is_pub",
+          "value": "false"
+        },
+        {
+          "name": "capa:source_module_index",
+          "value": "6"
+        },
+        {
+          "name": "capa:doc",
+          "value": "The 64 round constants (first 32 bits of the fractional parts of\nthe cube roots of the first 64 primes)."
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Clock"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Db"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Env"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Fs"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Net"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Proc"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Random"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Stdio"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Unsafe"
+        }
+      ]
+    },
+    {
+      "bom-ref": "capa:fn:configbroker.capa:_capa_m6__iv256",
+      "type": "library",
+      "name": "iv256",
+      "scope": "required",
+      "supplier": {
+        "name": "capa-build"
+      },
+      "licenses": [],
+      "properties": [
+        {
+          "name": "capa:kind",
+          "value": "function"
+        },
+        {
+          "name": "capa:pos",
+          "value": "vendor/capa_hash/sha256.capa:60:1"
+        },
+        {
+          "name": "capa:return_type",
+          "value": "List<Int>"
+        },
+        {
+          "name": "capa:has_unsafe",
+          "value": "false"
+        },
+        {
+          "name": "capa:is_pub",
+          "value": "false"
+        },
+        {
+          "name": "capa:source_module_index",
+          "value": "6"
+        },
+        {
+          "name": "capa:doc",
+          "value": "SHA-256 initial hash value."
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Clock"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Db"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Env"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Fs"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Net"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Proc"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Random"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Stdio"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Unsafe"
+        }
+      ]
+    },
+    {
+      "bom-ref": "capa:fn:configbroker.capa:_capa_m6__iv224",
+      "type": "library",
+      "name": "iv224",
+      "scope": "required",
+      "supplier": {
+        "name": "capa-build"
+      },
+      "licenses": [],
+      "properties": [
+        {
+          "name": "capa:kind",
+          "value": "function"
+        },
+        {
+          "name": "capa:pos",
+          "value": "vendor/capa_hash/sha256.capa:67:1"
+        },
+        {
+          "name": "capa:return_type",
+          "value": "List<Int>"
+        },
+        {
+          "name": "capa:has_unsafe",
+          "value": "false"
+        },
+        {
+          "name": "capa:is_pub",
+          "value": "false"
+        },
+        {
+          "name": "capa:source_module_index",
+          "value": "6"
+        },
+        {
+          "name": "capa:doc",
+          "value": "SHA-224 initial hash value."
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Clock"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Db"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Env"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Fs"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Net"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Proc"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Random"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Stdio"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Unsafe"
+        }
+      ]
+    },
+    {
+      "bom-ref": "capa:fn:configbroker.capa:_capa_m6__read_word",
+      "type": "library",
+      "name": "read_word",
+      "scope": "required",
+      "supplier": {
+        "name": "capa-build"
+      },
+      "licenses": [],
+      "properties": [
+        {
+          "name": "capa:kind",
+          "value": "function"
+        },
+        {
+          "name": "capa:pos",
+          "value": "vendor/capa_hash/sha256.capa:76:1"
+        },
+        {
+          "name": "capa:return_type",
+          "value": "Int"
+        },
+        {
+          "name": "capa:has_unsafe",
+          "value": "false"
+        },
+        {
+          "name": "capa:is_pub",
+          "value": "false"
+        },
+        {
+          "name": "capa:source_module_index",
+          "value": "6"
+        },
+        {
+          "name": "capa:doc",
+          "value": "Read one 32-bit big-endian word from `block` starting at byte `i`.\nEach byte is in 0..255; the top byte is masked to 8 bits before\nthe 24-bit shift so the product stays well under i64."
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Clock"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Db"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Env"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Fs"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Net"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Proc"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Random"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Stdio"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Unsafe"
+        },
+        {
+          "name": "capa:param",
+          "value": "block: List<Int>"
+        },
+        {
+          "name": "capa:param",
+          "value": "i: Int"
+        },
+        {
+          "name": "capa:attribute:constant_time",
+          "value": ""
+        }
+      ]
+    },
+    {
+      "bom-ref": "capa:fn:configbroker.capa:_capa_m6__schedule",
+      "type": "library",
+      "name": "schedule",
+      "scope": "required",
+      "supplier": {
+        "name": "capa-build"
+      },
+      "licenses": [],
+      "properties": [
+        {
+          "name": "capa:kind",
+          "value": "function"
+        },
+        {
+          "name": "capa:pos",
+          "value": "vendor/capa_hash/sha256.capa:85:1"
+        },
+        {
+          "name": "capa:return_type",
+          "value": "List<Int>"
+        },
+        {
+          "name": "capa:has_unsafe",
+          "value": "false"
+        },
+        {
+          "name": "capa:is_pub",
+          "value": "false"
+        },
+        {
+          "name": "capa:source_module_index",
+          "value": "6"
+        },
+        {
+          "name": "capa:doc",
+          "value": "Build the 64-word message schedule for one 64-byte block."
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Clock"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Db"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Env"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Fs"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Net"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Proc"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Random"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Stdio"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Unsafe"
+        },
+        {
+          "name": "capa:param",
+          "value": "block: List<Int>"
+        },
+        {
+          "name": "capa:attribute:constant_time",
+          "value": ""
+        }
+      ]
+    },
+    {
+      "bom-ref": "capa:fn:configbroker.capa:_capa_m6__compress",
+      "type": "library",
+      "name": "compress",
+      "scope": "required",
+      "supplier": {
+        "name": "capa-build"
+      },
+      "licenses": [],
+      "properties": [
+        {
+          "name": "capa:kind",
+          "value": "function"
+        },
+        {
+          "name": "capa:pos",
+          "value": "vendor/capa_hash/sha256.capa:105:1"
+        },
+        {
+          "name": "capa:return_type",
+          "value": "List<Int>"
+        },
+        {
+          "name": "capa:has_unsafe",
+          "value": "false"
+        },
+        {
+          "name": "capa:is_pub",
+          "value": "false"
+        },
+        {
+          "name": "capa:source_module_index",
+          "value": "6"
+        },
+        {
+          "name": "capa:doc",
+          "value": "One block of the compression function. Returns the updated state\n(the eight working words added back into the incoming state)."
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Clock"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Db"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Env"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Fs"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Net"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Proc"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Random"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Stdio"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Unsafe"
+        },
+        {
+          "name": "capa:param",
+          "value": "state: List<Int>"
+        },
+        {
+          "name": "capa:param",
+          "value": "block: List<Int>"
+        },
+        {
+          "name": "capa:attribute:constant_time",
+          "value": ""
+        }
+      ]
+    },
+    {
+      "bom-ref": "capa:fn:configbroker.capa:_capa_m6__pad",
+      "type": "library",
+      "name": "pad",
+      "scope": "required",
+      "supplier": {
+        "name": "capa-build"
+      },
+      "licenses": [],
+      "properties": [
+        {
+          "name": "capa:kind",
+          "value": "function"
+        },
+        {
+          "name": "capa:pos",
+          "value": "vendor/capa_hash/sha256.capa:154:1"
+        },
+        {
+          "name": "capa:return_type",
+          "value": "List<Int>"
+        },
+        {
+          "name": "capa:has_unsafe",
+          "value": "false"
+        },
+        {
+          "name": "capa:is_pub",
+          "value": "false"
+        },
+        {
+          "name": "capa:source_module_index",
+          "value": "6"
+        },
+        {
+          "name": "capa:doc",
+          "value": "SHA padding: append 0x80, then zeros, then the 64-bit big-endian\nbit length, to a multiple of 64 bytes. Returns a fresh byte list."
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Clock"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Db"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Env"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Fs"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Net"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Proc"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Random"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Stdio"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Unsafe"
+        },
+        {
+          "name": "capa:param",
+          "value": "message: List<Int>"
+        }
+      ]
+    },
+    {
+      "bom-ref": "capa:fn:configbroker.capa:_capa_m6__digest_words",
+      "type": "library",
+      "name": "digest_words",
+      "scope": "required",
+      "supplier": {
+        "name": "capa-build"
+      },
+      "licenses": [],
+      "properties": [
+        {
+          "name": "capa:kind",
+          "value": "function"
+        },
+        {
+          "name": "capa:pos",
+          "value": "vendor/capa_hash/sha256.capa:173:1"
+        },
+        {
+          "name": "capa:return_type",
+          "value": "List<Int>"
+        },
+        {
+          "name": "capa:has_unsafe",
+          "value": "false"
+        },
+        {
+          "name": "capa:is_pub",
+          "value": "false"
+        },
+        {
+          "name": "capa:source_module_index",
+          "value": "6"
+        },
+        {
+          "name": "capa:doc",
+          "value": "Run the full hash over `message` starting from `iv`, returning the\neight 32-bit state words."
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Clock"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Db"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Env"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Fs"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Net"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Proc"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Random"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Stdio"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Unsafe"
+        },
+        {
+          "name": "capa:param",
+          "value": "message: List<Int>"
+        },
+        {
+          "name": "capa:param",
+          "value": "iv: List<Int>"
+        }
+      ]
+    },
+    {
+      "bom-ref": "capa:fn:configbroker.capa:_capa_m6__slice64",
+      "type": "library",
+      "name": "slice64",
+      "scope": "required",
+      "supplier": {
+        "name": "capa-build"
+      },
+      "licenses": [],
+      "properties": [
+        {
+          "name": "capa:kind",
+          "value": "function"
+        },
+        {
+          "name": "capa:pos",
+          "value": "vendor/capa_hash/sha256.capa:185:1"
+        },
+        {
+          "name": "capa:return_type",
+          "value": "List<Int>"
+        },
+        {
+          "name": "capa:has_unsafe",
+          "value": "false"
+        },
+        {
+          "name": "capa:is_pub",
+          "value": "false"
+        },
+        {
+          "name": "capa:source_module_index",
+          "value": "6"
+        },
+        {
+          "name": "capa:doc",
+          "value": "Copy a 64-byte block starting at `start`."
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Clock"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Db"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Env"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Fs"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Net"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Proc"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Random"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Stdio"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Unsafe"
+        },
+        {
+          "name": "capa:param",
+          "value": "data: List<Int>"
+        },
+        {
+          "name": "capa:param",
+          "value": "start: Int"
+        }
+      ]
+    },
+    {
+      "bom-ref": "capa:fn:configbroker.capa:_capa_m6__words_to_bytes",
+      "type": "library",
+      "name": "words_to_bytes",
+      "scope": "required",
+      "supplier": {
+        "name": "capa-build"
+      },
+      "licenses": [],
+      "properties": [
+        {
+          "name": "capa:kind",
+          "value": "function"
+        },
+        {
+          "name": "capa:pos",
+          "value": "vendor/capa_hash/sha256.capa:194:1"
+        },
+        {
+          "name": "capa:return_type",
+          "value": "List<Int>"
+        },
+        {
+          "name": "capa:has_unsafe",
+          "value": "false"
+        },
+        {
+          "name": "capa:is_pub",
+          "value": "false"
+        },
+        {
+          "name": "capa:source_module_index",
+          "value": "6"
+        },
+        {
+          "name": "capa:doc",
+          "value": "Serialize `count` state words as big-endian bytes (4 each)."
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Clock"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Db"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Env"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Fs"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Net"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Proc"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Random"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Stdio"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Unsafe"
+        },
+        {
+          "name": "capa:param",
+          "value": "words: List<Int>"
+        },
+        {
+          "name": "capa:param",
+          "value": "count: Int"
+        }
+      ]
+    },
+    {
+      "bom-ref": "capa:fn:configbroker.capa:sha256_bytes",
+      "type": "library",
+      "name": "sha256_bytes",
+      "scope": "required",
+      "supplier": {
+        "name": "capa-build"
+      },
+      "licenses": [],
+      "properties": [
+        {
+          "name": "capa:kind",
+          "value": "function"
+        },
+        {
+          "name": "capa:pos",
+          "value": "vendor/capa_hash/sha256.capa:220:5"
+        },
+        {
+          "name": "capa:return_type",
+          "value": "List<Int>"
+        },
+        {
+          "name": "capa:has_unsafe",
+          "value": "false"
+        },
+        {
+          "name": "capa:is_pub",
+          "value": "true"
+        },
+        {
+          "name": "capa:doc",
+          "value": "SHA-256 digest of `message` as 32 raw bytes.\n`message`: bytes, each in 0..255; out-of-range elements are\nsilently masked to 8 bits (`& 0xFF`). See the BYTE CONTRACT above."
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Clock"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Db"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Env"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Fs"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Net"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Proc"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Random"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Stdio"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Unsafe"
+        },
+        {
+          "name": "capa:param",
+          "value": "message: List<Int>"
+        }
+      ]
+    },
+    {
+      "bom-ref": "capa:fn:configbroker.capa:sha256_hex",
+      "type": "library",
+      "name": "sha256_hex",
+      "scope": "required",
+      "supplier": {
+        "name": "capa-build"
+      },
+      "licenses": [],
+      "properties": [
+        {
+          "name": "capa:kind",
+          "value": "function"
+        },
+        {
+          "name": "capa:pos",
+          "value": "vendor/capa_hash/sha256.capa:226:5"
+        },
+        {
+          "name": "capa:return_type",
+          "value": "String"
+        },
+        {
+          "name": "capa:has_unsafe",
+          "value": "false"
+        },
+        {
+          "name": "capa:is_pub",
+          "value": "true"
+        },
+        {
+          "name": "capa:doc",
+          "value": "SHA-256 digest of `message` as a 64-character lowercase hex String.\n`message`: bytes, each in 0..255; out-of-range elements are\nsilently masked to 8 bits (`& 0xFF`). See the BYTE CONTRACT above."
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Clock"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Db"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Env"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Fs"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Net"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Proc"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Random"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Stdio"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Unsafe"
+        },
+        {
+          "name": "capa:param",
+          "value": "message: List<Int>"
+        }
+      ]
+    },
+    {
+      "bom-ref": "capa:fn:configbroker.capa:sha256_hex_utf8",
+      "type": "library",
+      "name": "sha256_hex_utf8",
+      "scope": "required",
+      "supplier": {
+        "name": "capa-build"
+      },
+      "licenses": [],
+      "properties": [
+        {
+          "name": "capa:kind",
+          "value": "function"
+        },
+        {
+          "name": "capa:pos",
+          "value": "vendor/capa_hash/sha256.capa:230:5"
+        },
+        {
+          "name": "capa:return_type",
+          "value": "String"
+        },
+        {
+          "name": "capa:has_unsafe",
+          "value": "false"
+        },
+        {
+          "name": "capa:is_pub",
+          "value": "true"
+        },
+        {
+          "name": "capa:doc",
+          "value": "SHA-256 of a String's UTF-8 bytes, as lowercase hex."
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Clock"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Db"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Env"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Fs"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Net"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Proc"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Random"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Stdio"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Unsafe"
+        },
+        {
+          "name": "capa:param",
+          "value": "text: String"
+        }
+      ]
+    },
+    {
+      "bom-ref": "capa:fn:configbroker.capa:sha224_bytes",
+      "type": "library",
+      "name": "sha224_bytes",
+      "scope": "required",
+      "supplier": {
+        "name": "capa-build"
+      },
+      "licenses": [],
+      "properties": [
+        {
+          "name": "capa:kind",
+          "value": "function"
+        },
+        {
+          "name": "capa:pos",
+          "value": "vendor/capa_hash/sha256.capa:237:5"
+        },
+        {
+          "name": "capa:return_type",
+          "value": "List<Int>"
+        },
+        {
+          "name": "capa:has_unsafe",
+          "value": "false"
+        },
+        {
+          "name": "capa:is_pub",
+          "value": "true"
+        },
+        {
+          "name": "capa:doc",
+          "value": "SHA-224 digest of `message` as 28 raw bytes (the first seven\nstate words; the eighth is dropped).\n`message`: bytes, each in 0..255; out-of-range elements are\nsilently masked to 8 bits (`& 0xFF`). See the BYTE CONTRACT above."
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Clock"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Db"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Env"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Fs"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Net"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Proc"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Random"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Stdio"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Unsafe"
+        },
+        {
+          "name": "capa:param",
+          "value": "message: List<Int>"
+        }
+      ]
+    },
+    {
+      "bom-ref": "capa:fn:configbroker.capa:sha224_hex",
+      "type": "library",
+      "name": "sha224_hex",
+      "scope": "required",
+      "supplier": {
+        "name": "capa-build"
+      },
+      "licenses": [],
+      "properties": [
+        {
+          "name": "capa:kind",
+          "value": "function"
+        },
+        {
+          "name": "capa:pos",
+          "value": "vendor/capa_hash/sha256.capa:243:5"
+        },
+        {
+          "name": "capa:return_type",
+          "value": "String"
+        },
+        {
+          "name": "capa:has_unsafe",
+          "value": "false"
+        },
+        {
+          "name": "capa:is_pub",
+          "value": "true"
+        },
+        {
+          "name": "capa:doc",
+          "value": "SHA-224 digest of `message` as a 56-character lowercase hex String.\n`message`: bytes, each in 0..255; out-of-range elements are\nsilently masked to 8 bits (`& 0xFF`). See the BYTE CONTRACT above."
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Clock"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Db"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Env"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Fs"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Net"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Proc"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Random"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Stdio"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Unsafe"
+        },
+        {
+          "name": "capa:param",
+          "value": "message: List<Int>"
+        }
+      ]
+    },
+    {
+      "bom-ref": "capa:fn:configbroker.capa:sha224_hex_utf8",
+      "type": "library",
+      "name": "sha224_hex_utf8",
+      "scope": "required",
+      "supplier": {
+        "name": "capa-build"
+      },
+      "licenses": [],
+      "properties": [
+        {
+          "name": "capa:kind",
+          "value": "function"
+        },
+        {
+          "name": "capa:pos",
+          "value": "vendor/capa_hash/sha256.capa:247:5"
+        },
+        {
+          "name": "capa:return_type",
+          "value": "String"
+        },
+        {
+          "name": "capa:has_unsafe",
+          "value": "false"
+        },
+        {
+          "name": "capa:is_pub",
+          "value": "true"
+        },
+        {
+          "name": "capa:doc",
+          "value": "SHA-224 of a String's UTF-8 bytes, as lowercase hex."
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Clock"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Db"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Env"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Fs"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Net"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Proc"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Random"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Stdio"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Unsafe"
+        },
+        {
+          "name": "capa:param",
+          "value": "text: String"
+        }
+      ]
+    },
+    {
+      "bom-ref": "capa:fn:configbroker.capa:_capa_m5__audit_line",
+      "type": "library",
+      "name": "audit_line",
+      "scope": "required",
+      "supplier": {
+        "name": "capa-build"
+      },
+      "licenses": [],
+      "properties": [
+        {
+          "name": "capa:kind",
+          "value": "function"
+        },
+        {
+          "name": "capa:pos",
+          "value": "audit.capa:27:1"
+        },
+        {
+          "name": "capa:return_type",
+          "value": "String"
+        },
+        {
+          "name": "capa:has_unsafe",
+          "value": "false"
+        },
+        {
+          "name": "capa:is_pub",
+          "value": "false"
+        },
+        {
+          "name": "capa:source_module_index",
+          "value": "5"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Clock"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Db"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Env"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Fs"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Net"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Proc"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Random"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Stdio"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Unsafe"
+        },
+        {
+          "name": "capa:param",
+          "value": "s: ResolvedSecret"
+        }
+      ]
+    },
+    {
+      "bom-ref": "capa:fn:configbroker.capa:build_audit",
+      "type": "library",
+      "name": "build_audit",
+      "scope": "required",
+      "supplier": {
+        "name": "capa-build"
+      },
+      "licenses": [],
+      "properties": [
+        {
+          "name": "capa:kind",
+          "value": "function"
+        },
+        {
+          "name": "capa:pos",
+          "value": "audit.capa:32:5"
+        },
+        {
+          "name": "capa:return_type",
+          "value": "String"
+        },
+        {
+          "name": "capa:has_unsafe",
+          "value": "false"
+        },
+        {
+          "name": "capa:is_pub",
+          "value": "true"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Clock"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Db"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Env"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Fs"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Net"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Proc"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Random"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Stdio"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Unsafe"
+        },
+        {
+          "name": "capa:param",
+          "value": "allowed_host: String"
+        },
+        {
+          "name": "capa:param",
+          "value": "slot_count: Int"
+        },
+        {
+          "name": "capa:param",
+          "value": "secrets: List<ResolvedSecret>"
+        }
+      ]
+    },
+    {
+      "bom-ref": "capa:fn:configbroker.capa:console_summary",
+      "type": "library",
+      "name": "console_summary",
+      "scope": "required",
+      "supplier": {
+        "name": "capa-build"
+      },
+      "licenses": [],
+      "properties": [
+        {
+          "name": "capa:kind",
+          "value": "function"
+        },
+        {
+          "name": "capa:pos",
+          "value": "audit.capa:50:5"
+        },
+        {
+          "name": "capa:return_type",
+          "value": "String"
+        },
+        {
+          "name": "capa:has_unsafe",
+          "value": "false"
+        },
+        {
+          "name": "capa:is_pub",
+          "value": "true"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Clock"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Db"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Env"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Fs"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Net"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Proc"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Random"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Stdio"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Unsafe"
+        },
+        {
+          "name": "capa:param",
+          "value": "allowed_host: String"
+        },
+        {
+          "name": "capa:param",
+          "value": "secret_count: Int"
+        },
+        {
+          "name": "capa:param",
+          "value": "slot_count: Int"
+        }
+      ]
+    },
+    {
+      "bom-ref": "capa:fn:configbroker.capa:run_pipeline",
+      "type": "library",
+      "name": "run_pipeline",
+      "scope": "required",
+      "supplier": {
+        "name": "capa-build"
+      },
+      "licenses": [],
+      "properties": [
+        {
+          "name": "capa:kind",
+          "value": "function"
+        },
+        {
+          "name": "capa:pos",
+          "value": "configbroker.capa:58:1"
+        },
+        {
+          "name": "capa:return_type",
+          "value": "Result<Int, ConfigError>"
+        },
+        {
+          "name": "capa:has_unsafe",
+          "value": "false"
+        },
+        {
+          "name": "capa:is_pub",
+          "value": "false"
+        },
+        {
+          "name": "capa:declared_capability",
+          "value": "Net"
+        },
+        {
+          "name": "capa:declared_capability",
+          "value": "Fs"
+        },
+        {
+          "name": "capa:transitively_reachable_capability",
+          "value": "Fs"
+        },
+        {
+          "name": "capa:transitively_reachable_capability",
+          "value": "Net"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Clock"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Db"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Env"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Proc"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Random"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Stdio"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Unsafe"
+        },
+        {
+          "name": "capa:param",
+          "value": "net: Net [cap]"
+        },
+        {
+          "name": "capa:param",
+          "value": "fs_out: Fs [cap]"
+        },
+        {
+          "name": "capa:param",
+          "value": "manifest_text: String"
+        },
+        {
+          "name": "capa:param",
+          "value": "template_text: String"
+        },
+        {
+          "name": "capa:param",
+          "value": "vault_text: String"
+        }
+      ]
+    },
+    {
+      "bom-ref": "capa:fn:configbroker.capa:main",
+      "type": "library",
+      "name": "main",
+      "scope": "required",
+      "supplier": {
+        "name": "capa-build"
+      },
+      "licenses": [],
+      "properties": [
+        {
+          "name": "capa:kind",
+          "value": "function"
+        },
+        {
+          "name": "capa:pos",
+          "value": "configbroker.capa:87:5"
+        },
+        {
+          "name": "capa:return_type",
+          "value": "()"
+        },
+        {
+          "name": "capa:has_unsafe",
+          "value": "false"
+        },
+        {
+          "name": "capa:is_pub",
+          "value": "true"
+        },
+        {
+          "name": "capa:declared_capability",
+          "value": "Stdio"
+        },
+        {
+          "name": "capa:declared_capability",
+          "value": "Fs"
+        },
+        {
+          "name": "capa:declared_capability",
+          "value": "Net"
+        },
+        {
+          "name": "capa:transitively_reachable_capability",
+          "value": "Fs"
+        },
+        {
+          "name": "capa:transitively_reachable_capability",
+          "value": "Net"
+        },
+        {
+          "name": "capa:transitively_reachable_capability",
+          "value": "Stdio"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Clock"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Db"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Env"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Proc"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Random"
+        },
+        {
+          "name": "capa:provably_excluded_capability",
+          "value": "Unsafe"
+        },
+        {
+          "name": "capa:param",
+          "value": "stdio: Stdio [cap]"
+        },
+        {
+          "name": "capa:param",
+          "value": "fs: Fs [cap]"
+        },
+        {
+          "name": "capa:param",
+          "value": "net: Net [cap]"
+        }
+      ]
+    }
+  ],
+  "dependencies": [
+    {
+      "ref": "capa:program:configbroker.capa",
+      "dependsOn": [
+        "capa:builtin:configbroker.capa:Fs",
+        "capa:builtin:configbroker.capa:Net",
+        "capa:builtin:configbroker.capa:Stdio",
+        "capa:fn:configbroker.capa:config_error_message",
+        "capa:fn:configbroker.capa:_capa_m2__is_comment",
+        "capa:fn:configbroker.capa:parse_manifest",
+        "capa:fn:configbroker.capa:parse_template",
+        "capa:fn:configbroker.capa:vault_lookup",
+        "capa:fn:configbroker.capa:fetch_db_password",
+        "capa:fn:configbroker.capa:fetch_api_token",
+        "capa:fn:configbroker.capa:fetch_signing_key",
+        "capa:fn:configbroker.capa:resolve_all",
+        "capa:fn:configbroker.capa:_capa_m4__find_value",
+        "capa:fn:configbroker.capa:_capa_m4__render_slot",
+        "capa:fn:configbroker.capa:resolve_config",
+        "capa:fn:configbroker.capa:_capa_m7__hex_digit",
+        "capa:fn:configbroker.capa:to_hex",
+        "capa:fn:configbroker.capa:_capa_m6__rotr32",
+        "capa:fn:configbroker.capa:_capa_m6__shr32",
+        "capa:fn:configbroker.capa:_capa_m6__round_constants",
+        "capa:fn:configbroker.capa:_capa_m6__iv256",
+        "capa:fn:configbroker.capa:_capa_m6__iv224",
+        "capa:fn:configbroker.capa:_capa_m6__read_word",
+        "capa:fn:configbroker.capa:_capa_m6__schedule",
+        "capa:fn:configbroker.capa:_capa_m6__compress",
+        "capa:fn:configbroker.capa:_capa_m6__pad",
+        "capa:fn:configbroker.capa:_capa_m6__digest_words",
+        "capa:fn:configbroker.capa:_capa_m6__slice64",
+        "capa:fn:configbroker.capa:_capa_m6__words_to_bytes",
+        "capa:fn:configbroker.capa:sha256_bytes",
+        "capa:fn:configbroker.capa:sha256_hex",
+        "capa:fn:configbroker.capa:sha256_hex_utf8",
+        "capa:fn:configbroker.capa:sha224_bytes",
+        "capa:fn:configbroker.capa:sha224_hex",
+        "capa:fn:configbroker.capa:sha224_hex_utf8",
+        "capa:fn:configbroker.capa:_capa_m5__audit_line",
+        "capa:fn:configbroker.capa:build_audit",
+        "capa:fn:configbroker.capa:console_summary",
+        "capa:fn:configbroker.capa:run_pipeline",
+        "capa:fn:configbroker.capa:main"
+      ]
+    },
+    {
+      "ref": "capa:fn:configbroker.capa:parse_manifest",
+      "dependsOn": [
+        "capa:fn:configbroker.capa:_capa_m2__is_comment"
+      ]
+    },
+    {
+      "ref": "capa:fn:configbroker.capa:parse_template",
+      "dependsOn": [
+        "capa:fn:configbroker.capa:_capa_m2__is_comment"
+      ]
+    },
+    {
+      "ref": "capa:fn:configbroker.capa:fetch_db_password",
+      "dependsOn": [
+        "capa:builtin:configbroker.capa:Net",
+        "capa:fn:configbroker.capa:vault_lookup"
+      ]
+    },
+    {
+      "ref": "capa:fn:configbroker.capa:fetch_api_token",
+      "dependsOn": [
+        "capa:builtin:configbroker.capa:Net",
+        "capa:fn:configbroker.capa:vault_lookup"
+      ]
+    },
+    {
+      "ref": "capa:fn:configbroker.capa:fetch_signing_key",
+      "dependsOn": [
+        "capa:builtin:configbroker.capa:Net",
+        "capa:fn:configbroker.capa:vault_lookup"
+      ]
+    },
+    {
+      "ref": "capa:fn:configbroker.capa:resolve_all",
+      "dependsOn": [
+        "capa:builtin:configbroker.capa:Net",
+        "capa:fn:configbroker.capa:fetch_db_password",
+        "capa:fn:configbroker.capa:fetch_api_token",
+        "capa:fn:configbroker.capa:fetch_signing_key"
+      ]
+    },
+    {
+      "ref": "capa:fn:configbroker.capa:resolve_config",
+      "dependsOn": [
+        "capa:fn:configbroker.capa:_capa_m4__find_value",
+        "capa:fn:configbroker.capa:_capa_m4__render_slot"
+      ]
+    },
+    {
+      "ref": "capa:fn:configbroker.capa:to_hex",
+      "dependsOn": [
+        "capa:fn:configbroker.capa:_capa_m7__hex_digit"
+      ]
+    },
+    {
+      "ref": "capa:fn:configbroker.capa:_capa_m6__schedule",
+      "dependsOn": [
+        "capa:fn:configbroker.capa:_capa_m6__read_word",
+        "capa:fn:configbroker.capa:_capa_m6__rotr32",
+        "capa:fn:configbroker.capa:_capa_m6__shr32"
+      ]
+    },
+    {
+      "ref": "capa:fn:configbroker.capa:_capa_m6__compress",
+      "dependsOn": [
+        "capa:fn:configbroker.capa:_capa_m6__schedule",
+        "capa:fn:configbroker.capa:_capa_m6__round_constants",
+        "capa:fn:configbroker.capa:_capa_m6__rotr32"
+      ]
+    },
+    {
+      "ref": "capa:fn:configbroker.capa:_capa_m6__digest_words",
+      "dependsOn": [
+        "capa:fn:configbroker.capa:_capa_m6__pad",
+        "capa:fn:configbroker.capa:_capa_m6__slice64",
+        "capa:fn:configbroker.capa:_capa_m6__compress"
+      ]
+    },
+    {
+      "ref": "capa:fn:configbroker.capa:sha256_bytes",
+      "dependsOn": [
+        "capa:fn:configbroker.capa:_capa_m6__words_to_bytes",
+        "capa:fn:configbroker.capa:_capa_m6__digest_words",
+        "capa:fn:configbroker.capa:_capa_m6__iv256"
+      ]
+    },
+    {
+      "ref": "capa:fn:configbroker.capa:sha256_hex",
+      "dependsOn": [
+        "capa:fn:configbroker.capa:to_hex",
+        "capa:fn:configbroker.capa:sha256_bytes"
+      ]
+    },
+    {
+      "ref": "capa:fn:configbroker.capa:sha256_hex_utf8",
+      "dependsOn": [
+        "capa:fn:configbroker.capa:sha256_hex"
+      ]
+    },
+    {
+      "ref": "capa:fn:configbroker.capa:sha224_bytes",
+      "dependsOn": [
+        "capa:fn:configbroker.capa:_capa_m6__words_to_bytes",
+        "capa:fn:configbroker.capa:_capa_m6__digest_words",
+        "capa:fn:configbroker.capa:_capa_m6__iv224"
+      ]
+    },
+    {
+      "ref": "capa:fn:configbroker.capa:sha224_hex",
+      "dependsOn": [
+        "capa:fn:configbroker.capa:to_hex",
+        "capa:fn:configbroker.capa:sha224_bytes"
+      ]
+    },
+    {
+      "ref": "capa:fn:configbroker.capa:sha224_hex_utf8",
+      "dependsOn": [
+        "capa:fn:configbroker.capa:sha224_hex"
+      ]
+    },
+    {
+      "ref": "capa:fn:configbroker.capa:build_audit",
+      "dependsOn": [
+        "capa:fn:configbroker.capa:_capa_m5__audit_line",
+        "capa:fn:configbroker.capa:sha256_hex_utf8"
+      ]
+    },
+    {
+      "ref": "capa:fn:configbroker.capa:run_pipeline",
+      "dependsOn": [
+        "capa:builtin:configbroker.capa:Fs",
+        "capa:builtin:configbroker.capa:Net",
+        "capa:fn:configbroker.capa:parse_manifest",
+        "capa:fn:configbroker.capa:parse_template",
+        "capa:fn:configbroker.capa:resolve_all",
+        "capa:fn:configbroker.capa:resolve_config",
+        "capa:fn:configbroker.capa:build_audit"
+      ]
+    },
+    {
+      "ref": "capa:fn:configbroker.capa:main",
+      "dependsOn": [
+        "capa:builtin:configbroker.capa:Fs",
+        "capa:builtin:configbroker.capa:Net",
+        "capa:builtin:configbroker.capa:Stdio",
+        "capa:fn:configbroker.capa:run_pipeline",
+        "capa:fn:configbroker.capa:console_summary",
+        "capa:fn:configbroker.capa:config_error_message"
+      ]
+    }
+  ]
+}

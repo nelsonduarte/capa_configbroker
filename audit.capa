@@ -1,0 +1,51 @@
+// audit.capa
+//
+// The audit log builder. This is the module the whole guarantee is
+// about: the audit trail records WHAT the broker did (which secrets it
+// resolved, from where, into which slots) WITHOUT recording any secret
+// VALUE. It is built exclusively from public data:
+//
+//   * the secret NAME (a key, public),
+//   * the SOURCE ("upstream" or "vault-fallback", public provenance),
+//   * COUNTS and the allowlisted host (public),
+//   * a SHA-256 integrity fingerprint over the public audit text.
+//
+// It never reads ResolvedSecret.value. If a future edit tried to log a
+// value, the information-flow checker would reject this module the same
+// way it rejects leaky_configbroker.capa. That is the point: the audit
+// log's non-leak property is compiler-enforced, not review-enforced.
+//
+// Zero capabilities: pure string building plus a pure hash. The Fs write
+// happens in configbroker.capa.
+
+import domain
+import capa_hash.sha256
+
+// One audit line per resolved secret: the key and where it came from.
+// Deliberately NO value. ``s.value`` is @secret and never referenced
+// here; only ``s.name`` (public) and ``s.source`` (public) are.
+fun audit_line(s: ResolvedSecret) -> String
+    return "resolved secret ${s.name} from ${s.source}"
+
+// Build the audit log body from the resolved set and the run metadata.
+// Everything here is public; the compiler proves no secret reaches it.
+pub fun build_audit(
+    allowed_host: String,
+    slot_count: Int,
+    secrets: List<ResolvedSecret>
+) -> String
+    var body = "# ConfigBroker audit log\n"
+    body = "${body}upstream allowlist: ${allowed_host}\n"
+    body = "${body}secrets resolved: ${secrets.length()}\n"
+    body = "${body}config slots filled: ${slot_count}\n"
+    for s in secrets
+        body = "${body}${audit_line(s)}\n"
+    // Integrity fingerprint over the PUBLIC audit text so a tamper of
+    // the log is detectable. Hashing public data, no secret involved.
+    let digest = sha256_hex_utf8(body)
+    body = "${body}audit-sha256: ${digest}\n"
+    return body
+
+// A short human console summary. Public only.
+pub fun console_summary(allowed_host: String, secret_count: Int, slot_count: Int) -> String
+    return "resolved ${secret_count} secrets (upstream allowlist ${allowed_host}) into ${slot_count} config slots; no secret value reached the audit log or console (proved by capa --check)"

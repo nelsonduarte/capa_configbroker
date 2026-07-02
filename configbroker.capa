@@ -1,0 +1,116 @@
+// configbroker.capa
+//
+// The ConfigBroker resolver, wired end to end:
+//
+//   read manifest + template + vault (Fs, read-only over data/)
+//     -> parse (parse.capa, pure)
+//     -> fetch secrets (fetch.capa: Net attenuated to one host,
+//        offline vault fallback) -- values are @secret
+//     -> resolve config into authorised slots (resolve.capa, one
+//        audited declassify) -> write out/resolved.env (Fs write over out/)
+//     -> build audit log from PUBLIC data only (audit.capa) ->
+//        write out/audit.log (Fs write over out/)
+//     -> console summary (Stdio), public only
+//
+// Capability discipline. main acquires exactly three capabilities,
+// Stdio, Fs and Net, and immediately attenuates two of them:
+//
+//   * Net is restricted to the SINGLE allowlisted upstream host. Every
+//     get() is gated by that restriction before any syscall, so the
+//     broker provably cannot reach any other host. The SBOM records the
+//     restrict_to(host).
+//
+//   * Fs is split into a READ-ONLY view over data/ (manifest, template,
+//     vault) and a WRITE view over out/ (resolved config + audit log).
+//     Neither view can touch the other's directory.
+//
+// Note what main never acquires: Env, Proc, Db, Clock, Random, Unsafe.
+// The capability SBOM proves it. So "this broker cannot shell out, read
+// arbitrary env, or reach a second host" is a machine-checked fact.
+//
+// The information-flow guarantee is orthogonal and just as strong: each
+// fetched secret's value is @secret, so the compiler proves it cannot
+// reach the audit log, the console, or a telemetry sink without crossing
+// the single audited declassify in resolve.capa. leaky_configbroker.capa
+// shows the compiler rejecting a deliberate breach of exactly that rule.
+//
+// Paths and the upstream host are string literals at their sinks, so the
+// compiler fixes the filesystem authority and the Net host ceiling at
+// compile time (constant propagation) rather than taking them from an
+// argument. That keeps Env out of the surface and makes the WASI
+// component's authority statically known (no --preopen needed).
+
+import domain
+import parse
+import fetch
+import resolve
+import audit
+
+// The single allowlisted upstream host, named once for the audit log
+// and the console. The Net restrict_to call site and each fetch URL pass
+// this host as an INLINE literal (the const feeds only human-readable
+// messages), because the WASI static host ceiling const-propagates a
+// literal at a Net sink, not a const read off a restricted-Net receiver.
+const UPSTREAM_HOST: String = "config.internal.example"
+
+// The pipeline over already-read input text. Returns the number of
+// config slots filled on success so main can log and summarise it.
+fun run_pipeline(
+    net: Net,
+    fs_out: Fs,
+    manifest_text: String,
+    template_text: String,
+    vault_text: String
+) -> Result<Int, ConfigError>
+    let entries = parse.parse_manifest(manifest_text)?
+    let slots = parse.parse_template(template_text)?
+
+    // Fetch every manifested secret (values are @secret from here).
+    let secrets = fetch.resolve_all(net, vault_text, entries)?
+
+    // Resolve the config: secrets cross the single audited declassify in
+    // resolve.capa, landing only in their authorised slots.
+    let config_body = resolve.resolve_config(slots, secrets)?
+    match fs_out.write("out/resolved.env", config_body)
+        Ok(_)  -> ()
+        Err(e) -> return Err(Io("${e}"))
+
+    // Build the audit log from PUBLIC data only. No secret value can
+    // reach it: build_audit references only names, sources and counts.
+    let audit_body = audit.build_audit(UPSTREAM_HOST, slots.length(), secrets)
+    match fs_out.write("out/audit.log", audit_body)
+        Ok(_)  -> ()
+        Err(e) -> return Err(Io("${e}"))
+
+    return Ok(slots.length())
+
+pub fun main(stdio: Stdio, fs: Fs, net: Net)
+    stdio.println("== capa_configbroker: capability-secured config/secret resolver ==")
+
+    // Least privilege on Net: restrict to the single upstream host. Any
+    // get() to another host is denied before a syscall. Literal host so
+    // the WASI ceiling is statically known.
+    let upstream = net.restrict_to("config.internal.example")
+
+    // Least privilege on Fs: read-only over data/, write over out/.
+    let fs_vault = fs.restrict_to("data/")
+    let fs_out = fs.restrict_to("out/")
+
+    // Inline literal paths at the read sinks (WASI ceiling idiom).
+    let manifest_text = match fs_vault.read("data/manifest.tsv")
+        Ok(s)  -> s
+        Err(e) -> return stdio.eprintln("cannot read fetch manifest: ${e}")
+    let template_text = match fs_vault.read("data/template.tsv")
+        Ok(s)  -> s
+        Err(e) -> return stdio.eprintln("cannot read config template: ${e}")
+    let vault_text = match fs_vault.read("data/vault.tsv")
+        Ok(s)  -> s
+        Err(e) -> return stdio.eprintln("cannot read local vault fixture: ${e}")
+
+    match run_pipeline(upstream, fs_out, manifest_text, template_text, vault_text)
+        Ok(count) ->
+            stdio.println("resolved config written to out/resolved.env")
+            stdio.println("audit log written to out/audit.log")
+            stdio.println(audit.console_summary(UPSTREAM_HOST, count, count))
+        Err(e) ->
+            stdio.eprintln("broker failed: ${config_error_message(e)}")

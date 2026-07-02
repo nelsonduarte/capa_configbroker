@@ -1,0 +1,248 @@
+// capa_hash.sha256
+//
+// SHA-256 and SHA-224 (FIPS 180-4), a pure function from bytes to a
+// digest. No capabilities, no Unsafe; the same compression machine
+// drives both variants, differing only in the initial state and the
+// final truncation.
+//
+// Masking discipline. Capa's Int is a signed 64-bit integer with
+// CHECKED overflow: an add or shift that would exceed i64 traps. So
+// every value that participates in the 32-bit word arithmetic is
+// masked back to 32 bits with `& MASK32` after each add and after
+// each rotate, and any value about to be left-shifted is first
+// masked to at most 24 bits (it is shifted by at most 24, keeping the
+// result under 2^48, far below the i64 ceiling). A right shift of an
+// already-masked (<= 32-bit, non-negative) value is logical, exactly
+// what SHA needs. NOT is x ^ MASK32 (there is no `~`).
+//
+// Bitwise operators bind LOOSER than `+` in Capa (`a + b & m` parses
+// as `a + (b & m)`), so every masked sum is fully parenthesised.
+
+import capa_hash.tables
+
+const MASK32: Int = 0xFFFFFFFF
+
+/// Rotate a 32-bit word right by `n` bits. `x` is assumed already
+/// masked to 32 bits; `(x << (32 - n))` can reach 2^63 only if x had
+/// high bits, so the whole expression is re-masked to 32 bits.
+@constant_time()
+fun rotr32(x: Int, n: Int) -> Int
+    return ((x >> n) | (x << (32 - n))) & MASK32
+
+/// Logical right shift of an already-masked 32-bit word.
+@constant_time()
+fun shr32(x: Int, n: Int) -> Int
+    return x >> n
+
+/// The 64 round constants (first 32 bits of the fractional parts of
+/// the cube roots of the first 64 primes).
+fun round_constants() -> List<Int>
+    return [
+        0x428a2f98, 0x71374491, 0xb5c0fbcf, 0xe9b5dba5,
+        0x3956c25b, 0x59f111f1, 0x923f82a4, 0xab1c5ed5,
+        0xd807aa98, 0x12835b01, 0x243185be, 0x550c7dc3,
+        0x72be5d74, 0x80deb1fe, 0x9bdc06a7, 0xc19bf174,
+        0xe49b69c1, 0xefbe4786, 0x0fc19dc6, 0x240ca1cc,
+        0x2de92c6f, 0x4a7484aa, 0x5cb0a9dc, 0x76f988da,
+        0x983e5152, 0xa831c66d, 0xb00327c8, 0xbf597fc7,
+        0xc6e00bf3, 0xd5a79147, 0x06ca6351, 0x14292967,
+        0x27b70a85, 0x2e1b2138, 0x4d2c6dfc, 0x53380d13,
+        0x650a7354, 0x766a0abb, 0x81c2c92e, 0x92722c85,
+        0xa2bfe8a1, 0xa81a664b, 0xc24b8b70, 0xc76c51a3,
+        0xd192e819, 0xd6990624, 0xf40e3585, 0x106aa070,
+        0x19a4c116, 0x1e376c08, 0x2748774c, 0x34b0bcb5,
+        0x391c0cb3, 0x4ed8aa4a, 0x5b9cca4f, 0x682e6ff3,
+        0x748f82ee, 0x78a5636f, 0x84c87814, 0x8cc70208,
+        0x90befffa, 0xa4506ceb, 0xbef9a3f7, 0xc67178f2
+    ]
+
+/// SHA-256 initial hash value.
+fun iv256() -> List<Int>
+    return [
+        0x6a09e667, 0xbb67ae85, 0x3c6ef372, 0xa54ff53a,
+        0x510e527f, 0x9b05688c, 0x1f83d9ab, 0x5be0cd19
+    ]
+
+/// SHA-224 initial hash value.
+fun iv224() -> List<Int>
+    return [
+        0xc1059ed8, 0x367cd507, 0x3070dd17, 0xf70e5939,
+        0xffc00b31, 0x68581511, 0x64f98fa7, 0xbefa4fa4
+    ]
+
+/// Read one 32-bit big-endian word from `block` starting at byte `i`.
+/// Each byte is in 0..255; the top byte is masked to 8 bits before
+/// the 24-bit shift so the product stays well under i64.
+@constant_time()
+fun read_word(block: List<Int>, i: Int) -> Int
+    let b0 = (block[i] & 0xFF) << 24
+    let b1 = (block[i + 1] & 0xFF) << 16
+    let b2 = (block[i + 2] & 0xFF) << 8
+    let b3 = block[i + 3] & 0xFF
+    return (b0 | b1 | b2 | b3) & MASK32
+
+/// Build the 64-word message schedule for one 64-byte block.
+@constant_time()
+fun schedule(block: List<Int>) -> List<Int>
+    let w: List<Int> = []
+    var t = 0
+    while t < 16
+        w.push(read_word(block, t * 4))
+        t = t + 1
+    t = 16
+    while t < 64
+        let w15 = w[t - 15]
+        let w2 = w[t - 2]
+        let s0 = (rotr32(w15, 7) ^ rotr32(w15, 18)) ^ shr32(w15, 3)
+        let s1 = (rotr32(w2, 17) ^ rotr32(w2, 19)) ^ shr32(w2, 10)
+        let nw = (((w[t - 16] + s0) & MASK32) + ((w[t - 7] + s1) & MASK32)) & MASK32
+        w.push(nw)
+        t = t + 1
+    return w
+
+/// One block of the compression function. Returns the updated state
+/// (the eight working words added back into the incoming state).
+@constant_time()
+fun compress(state: List<Int>, block: List<Int>) -> List<Int>
+    let w = schedule(block)
+    let k = round_constants()
+
+    var a = state[0]
+    var b = state[1]
+    var c = state[2]
+    var d = state[3]
+    var e = state[4]
+    var f = state[5]
+    var g = state[6]
+    var h = state[7]
+
+    var t = 0
+    while t < 64
+        let big_s1 = (rotr32(e, 6) ^ rotr32(e, 11)) ^ rotr32(e, 25)
+        let ch = (e & f) ^ ((e ^ MASK32) & g)
+        let t1a = ((h + big_s1) & MASK32)
+        let t1b = ((ch + k[t]) & MASK32)
+        let temp1 = (((t1a + t1b) & MASK32) + w[t]) & MASK32
+
+        let big_s0 = (rotr32(a, 2) ^ rotr32(a, 13)) ^ rotr32(a, 22)
+        let maj = ((a & b) ^ (a & c)) ^ (b & c)
+        let temp2 = (big_s0 + maj) & MASK32
+
+        h = g
+        g = f
+        f = e
+        e = (d + temp1) & MASK32
+        d = c
+        c = b
+        b = a
+        a = (temp1 + temp2) & MASK32
+        t = t + 1
+
+    return [
+        (state[0] + a) & MASK32,
+        (state[1] + b) & MASK32,
+        (state[2] + c) & MASK32,
+        (state[3] + d) & MASK32,
+        (state[4] + e) & MASK32,
+        (state[5] + f) & MASK32,
+        (state[6] + g) & MASK32,
+        (state[7] + h) & MASK32
+    ]
+
+/// SHA padding: append 0x80, then zeros, then the 64-bit big-endian
+/// bit length, to a multiple of 64 bytes. Returns a fresh byte list.
+fun pad(message: List<Int>) -> List<Int>
+    let out: List<Int> = []
+    for byte in message
+        out.push(byte & 0xFF)
+    let bit_len = message.length() * 8
+    out.push(0x80)
+    // Zero-fill until the length-in-bytes is 56 mod 64.
+    while out.length() % 64 != 56
+        out.push(0x00)
+    // 64-bit big-endian bit length.
+    var i = 0
+    while i < 8
+        let shift = (7 - i) * 8
+        out.push((bit_len >> shift) & 0xFF)
+        i = i + 1
+    return out
+
+/// Run the full hash over `message` starting from `iv`, returning the
+/// eight 32-bit state words.
+fun digest_words(message: List<Int>, iv: List<Int>) -> List<Int>
+    var state = iv
+    let data = pad(message)
+    let nblocks = data.length() / 64
+    var i = 0
+    while i < nblocks
+        let block = slice64(data, i * 64)
+        state = compress(state, block)
+        i = i + 1
+    return state
+
+/// Copy a 64-byte block starting at `start`.
+fun slice64(data: List<Int>, start: Int) -> List<Int>
+    let block: List<Int> = []
+    var j = 0
+    while j < 64
+        block.push(data[start + j])
+        j = j + 1
+    return block
+
+/// Serialize `count` state words as big-endian bytes (4 each).
+fun words_to_bytes(words: List<Int>, count: Int) -> List<Int>
+    let out: List<Int> = []
+    var i = 0
+    while i < count
+        let word = words[i]
+        out.push((word >> 24) & 0xFF)
+        out.push((word >> 16) & 0xFF)
+        out.push((word >> 8) & 0xFF)
+        out.push(word & 0xFF)
+        i = i + 1
+    return out
+
+// ---------------------------------------------------------------
+// Public surface: byte and hex digests for both variants, over raw
+// bytes (List<Int>, each 0..255) and over a UTF-8 String.
+//
+// BYTE CONTRACT: in every `_bytes` / `_hex` entry point below, each
+// element of `message` MUST be in 0..255. A value outside that range
+// is SILENTLY masked to its low 8 bits (`& 0xFF`): 256 -> 0, -1 ->
+// 255, with no error reported, identically on both backends. To stay
+// safe, feed bytes from a String (the `_utf8` wrappers, or
+// `String.bytes()`) or from a source already constrained to 0..255.
+
+/// SHA-256 digest of `message` as 32 raw bytes.
+/// `message`: bytes, each in 0..255; out-of-range elements are
+/// silently masked to 8 bits (`& 0xFF`). See the BYTE CONTRACT above.
+pub fun sha256_bytes(message: List<Int>) -> List<Int>
+    return words_to_bytes(digest_words(message, iv256()), 8)
+
+/// SHA-256 digest of `message` as a 64-character lowercase hex String.
+/// `message`: bytes, each in 0..255; out-of-range elements are
+/// silently masked to 8 bits (`& 0xFF`). See the BYTE CONTRACT above.
+pub fun sha256_hex(message: List<Int>) -> String
+    return to_hex(sha256_bytes(message))
+
+/// SHA-256 of a String's UTF-8 bytes, as lowercase hex.
+pub fun sha256_hex_utf8(text: String) -> String
+    return sha256_hex(text.bytes())
+
+/// SHA-224 digest of `message` as 28 raw bytes (the first seven
+/// state words; the eighth is dropped).
+/// `message`: bytes, each in 0..255; out-of-range elements are
+/// silently masked to 8 bits (`& 0xFF`). See the BYTE CONTRACT above.
+pub fun sha224_bytes(message: List<Int>) -> List<Int>
+    return words_to_bytes(digest_words(message, iv224()), 7)
+
+/// SHA-224 digest of `message` as a 56-character lowercase hex String.
+/// `message`: bytes, each in 0..255; out-of-range elements are
+/// silently masked to 8 bits (`& 0xFF`). See the BYTE CONTRACT above.
+pub fun sha224_hex(message: List<Int>) -> String
+    return to_hex(sha224_bytes(message))
+
+/// SHA-224 of a String's UTF-8 bytes, as lowercase hex.
+pub fun sha224_hex_utf8(text: String) -> String
+    return sha224_hex(text.bytes())

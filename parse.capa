@@ -1,0 +1,104 @@
+// parse.capa
+//
+// Pure parsers for the two ConfigBroker inputs. Zero capabilities, no
+// I/O: they take already-read text and return typed values or a typed
+// ConfigError. Both formats are deliberately trivial line-based text so
+// the parsing carries no dependency and no hidden authority.
+//
+//   * the FETCH MANIFEST (data/manifest.tsv): one "NAME<TAB>URL" line
+//     per secret to fetch from the upstream. NAME is the secret's key;
+//     URL is where to GET it from the allowlisted host. Lines that are
+//     blank or start with '#' are comments.
+//
+//   * the CONFIG TEMPLATE (data/template.tsv): one "SLOT<TAB>SECRET"
+//     line per output slot. SLOT is the key to emit in the resolved
+//     config; SECRET is which fetched secret fills it. Same comment
+//     rules.
+//
+// Neither parser ever touches a secret VALUE: the manifest carries keys
+// and URLs, the template carries slot keys and secret names. All of it
+// is public.
+
+import domain
+
+// A parsed manifest entry: the secret name and the URL to fetch it from.
+// Public: no secret material here, only the request target.
+pub type FetchEntry {
+    name: String,
+    url: String
+}
+
+fun is_comment(line: String) -> Bool
+    let t = line.trim()
+    if t.length() == 0
+        return true
+    return t.starts_with("#")
+
+// Parse the fetch manifest into a list of (name, url) entries. A line
+// that is not blank / a comment must be exactly "NAME<TAB>URL".
+pub fun parse_manifest(text: String) -> Result<List<FetchEntry>, ConfigError>
+    var entries: List<FetchEntry> = []
+    var idx = 0
+    for line in text.split("\n")
+        idx = idx + 1
+        if is_comment(line)
+            continue
+        let parts = line.split("\t")
+        if parts.length() < 2
+            return Err(MalformedManifest(idx))
+        let name = match parts.get(0)
+            Some(s) -> s.trim()
+            None    -> return Err(MalformedManifest(idx))
+        let url = match parts.get(1)
+            Some(s) -> s.trim()
+            None    -> return Err(MalformedManifest(idx))
+        if name.length() == 0
+            return Err(MalformedManifest(idx))
+        if url.length() == 0
+            return Err(MalformedManifest(idx))
+        entries.push(FetchEntry { name: name, url: url })
+    if entries.length() == 0
+        return Err(EmptyManifest)
+    return Ok(entries)
+
+// Parse the config template into a list of Slots. A line that is not
+// blank / a comment must be exactly "SLOT<TAB>SECRET".
+pub fun parse_template(text: String) -> Result<List<Slot>, ConfigError>
+    var slots: List<Slot> = []
+    var idx = 0
+    for line in text.split("\n")
+        idx = idx + 1
+        if is_comment(line)
+            continue
+        let parts = line.split("\t")
+        if parts.length() < 2
+            return Err(MalformedManifest(idx))
+        let key = match parts.get(0)
+            Some(s) -> s.trim()
+            None    -> return Err(MalformedManifest(idx))
+        let secret_name = match parts.get(1)
+            Some(s) -> s.trim()
+            None    -> return Err(MalformedManifest(idx))
+        if key.length() == 0
+            return Err(MalformedManifest(idx))
+        if secret_name.length() == 0
+            return Err(MalformedManifest(idx))
+        slots.push(Slot { key: key, secret_name: secret_name })
+    return Ok(slots)
+
+// Look up a secret VALUE by name in the local vault text (a
+// "NAME<TAB>VALUE" table). The RETURNED value is @secret: the vault
+// holds secret material, so anything read out of it is labelled secret
+// and the compiler tracks it from here.
+pub fun vault_lookup(vault_text: String, name: String) -> @secret String
+    for line in vault_text.split("\n")
+        let parts = line.split("\t")
+        if parts.length() >= 2
+            let k = match parts.get(0)
+                Some(s) -> s
+                None    -> ""
+            if k == name
+                match parts.get(1)
+                    Some(v) -> return v
+                    None    -> return ""
+    return ""

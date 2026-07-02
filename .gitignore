@@ -1,0 +1,20 @@
+# Python bytecode (if anyone runs the transpiled code directly)
+__pycache__/
+*.pyc
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Editor
+.vscode/
+.idea/
+*.swp
+
+# Local probes
+_*.capa
+
+# NOTE: vendor/ is committed on purpose (path dependencies, no `capa
+# install` step needed), and out/ + sbom/ are committed as the sample
+# report / attestation / SBOM artefacts the README references. Regenerate
+# them with ./generate.sh.

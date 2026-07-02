@@ -1,0 +1,81 @@
+{
+  "_type": "https://in-toto.io/Statement/v1",
+  "subject": [
+    {
+      "name": "audit.capa",
+      "digest": {
+        "sha256": "7378657fd566b642b60561b753e9854e79383f0fe2e8efd292fce90886fd06e1"
+      }
+    },
+    {
+      "name": "configbroker.capa",
+      "digest": {
+        "sha256": "df22b5dba80493068abc93ebbe6a96ea51368fa875f038aef961d1dfdeb946b6"
+      }
+    },
+    {
+      "name": "domain.capa",
+      "digest": {
+        "sha256": "69db6f0251e76e9e94e1d9e79c1f29ea110f43d5268bff614410b394224b635d"
+      }
+    },
+    {
+      "name": "fetch.capa",
+      "digest": {
+        "sha256": "be3ae4301c1ab2e838155a363778f02a8cd41b8a3762ca9ad78e476fd717155a"
+      }
+    },
+    {
+      "name": "parse.capa",
+      "digest": {
+        "sha256": "1e674bfa9cb5c6df4f95efc055b2e9e2fe9e79605f5b26ae60dd94136d3fb0f7"
+      }
+    },
+    {
+      "name": "resolve.capa",
+      "digest": {
+        "sha256": "c2da6e1c10e7a5feea825cc6c61c960cdbe22337662483a7f9c0d9b985dd588e"
+      }
+    },
+    {
+      "name": "vendor/capa_hash/sha256.capa",
+      "digest": {
+        "sha256": "8d521ee3616e7b7a003cf5bc238e00df9847b33626842d48a995ed0cb5b9e968"
+      }
+    },
+    {
+      "name": "vendor/capa_hash/tables.capa",
+      "digest": {
+        "sha256": "1ee64120597a312387d95e622c513acaf7e5de8cef88e36e0fd0cdbd9da5208d"
+      }
+    }
+  ],
+  "predicateType": "https://slsa.dev/provenance/v1",
+  "predicate": {
+    "buildDefinition": {
+      "buildType": "https://capa-language.com/build/transpile-to-python/v1",
+      "externalParameters": {
+        "source": "configbroker.capa"
+      },
+      "internalParameters": {
+        "capaVersion": "1.13.0",
+        "target": "python>=3.10"
+      },
+      "resolvedDependencies": []
+    },
+    "runDetails": {
+      "builder": {
+        "id": "https://capa-language.com/cli",
+        "version": {
+          "capa": "1.13.0"
+        }
+      },
+      "metadata": {
+        "invocationId": "293c2a57-13fb-524e-938a-3696e37746ba",
+        "startedOn": "2026-01-01T00:00:00Z",
+        "finishedOn": "2026-01-01T00:00:00Z"
+      },
+      "byproducts": []
+    }
+  }
+}

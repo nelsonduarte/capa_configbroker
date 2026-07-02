@@ -1,0 +1,8 @@
+# ConfigBroker audit log
+upstream allowlist: config.internal.example
+secrets resolved: 3
+config slots filled: 3
+resolved secret DB_PASSWORD from vault-fallback
+resolved secret API_TOKEN from vault-fallback
+resolved secret SIGNING_KEY from vault-fallback
+audit-sha256: ac31ab90c1b075f44a6e0d742ddb804072625a70c1fafc9d3ae2528f68b4fac6

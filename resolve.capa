@@ -1,0 +1,64 @@
+// resolve.capa
+//
+// The single audited secret -> authorised-slot bridge in ConfigBroker.
+//
+// The resolved config file legitimately contains secret material: a
+// DATABASE_URL_PASSWORD slot must carry the real DB password, or the
+// downstream service cannot connect. Writing that value into the output
+// is therefore a deliberate DISCLOSURE, and the only sanctioned way to
+// make a disclosure in Capa is ``declassify`` with a recorded reason.
+// That reason is emitted into the capability SBOM as a
+// ``declassification_site``: a machine-checkable record of exactly
+// where, and why, ConfigBroker materialises a secret into output.
+//
+// This is the ONE place a fetched secret is allowed to influence an
+// output file, and even here it lands ONLY in the config slot the
+// template authorised for it. Every other path from a @secret value to a
+// public sink (the audit log, the console, a telemetry POST) is a
+// compile-time information-flow error (see leaky_configbroker.capa).
+//
+// Zero capabilities: pure string materialisation over the resolved
+// secrets and the template. The Fs write itself happens in
+// configbroker.capa; this module only builds the string.
+
+import domain
+
+// Find the resolved secret named ``name`` in the fetched set. Returns
+// the @secret value or None if absent. The value stays @secret: this is
+// an in-secret-domain lookup, no disclosure.
+fun find_value(secrets: List<ResolvedSecret>, name: String) -> Option<ResolvedSecret>
+    for s in secrets
+        if s.name == name
+            return Some(s)
+    return None
+
+// Render one authorised config line: "SLOT=VALUE". This is the single
+// declassify bridge. The secret value crosses from the secret domain
+// into the (about-to-be-written) config file ONLY here, ONLY into the
+// slot key the template paired it with, with an audited reason recorded
+// in the SBOM.
+fun render_slot(slot_key: String, s: ResolvedSecret) -> String
+    return declassify(
+        "${slot_key}=${s.value}",
+        reason: "authorised config materialisation: the fetched secret is written into exactly the output slot the config template declared for it, and nowhere else; this is the sole sanctioned secret-to-output crossing in the broker"
+    )
+
+// Resolve the full config: for every slot in the template, look up its
+// named secret among the fetched set and emit the authorised line. A
+// slot naming a secret that was not fetched is a typed
+// UnknownSlotSecret error (the template and the manifest disagree),
+// caught here before any write.
+//
+// The returned String is PUBLIC (it is the declassified config text);
+// the compiler is satisfied because every secret value that entered it
+// crossed the audited declassify above.
+pub fun resolve_config(
+    slots: List<Slot>,
+    secrets: List<ResolvedSecret>
+) -> Result<String, ConfigError>
+    var body = "# ConfigBroker resolved configuration\n# secrets materialised into authorised slots only\n"
+    for slot in slots
+        match find_value(secrets, slot.secret_name)
+            Some(s) -> body = "${body}${render_slot(slot.key, s)}\n"
+            None    -> return Err(UnknownSlotSecret(slot.secret_name))
+    return Ok(body)

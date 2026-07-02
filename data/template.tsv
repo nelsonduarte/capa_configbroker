@@ -1,0 +1,5 @@
+# ConfigBroker config template
+# one "SLOT<TAB>SECRET" line per output slot: which fetched secret fills which key
+DATABASE_URL_PASSWORD	DB_PASSWORD
+SERVICE_API_TOKEN	API_TOKEN
+JWT_SIGNING_KEY	SIGNING_KEY

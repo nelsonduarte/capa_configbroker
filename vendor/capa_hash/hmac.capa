@@ -1,0 +1,70 @@
+// capa_hash.hmac
+//
+// HMAC-SHA256 (RFC 2104), composed from the SHA-256 primitive. The
+// SHA-256 block size is 64 bytes. A key longer than the block is
+// hashed first; a shorter key is zero-padded to 64. The inner pad is
+// 0x36 per byte, the outer pad 0x5c.
+//
+//   HMAC(K, m) = H( (K0 ^ opad) || H( (K0 ^ ipad) || m ) )
+//
+// Pure: bytes in, bytes out, no capabilities.
+
+import capa_hash.sha256
+import capa_hash.tables
+
+const BLOCK: Int = 64
+
+/// Normalize a key to exactly 64 bytes: hash it if it is longer than
+/// the block, then zero-pad to the block size.
+fun key_block(key: List<Int>) -> List<Int>
+    var k = key
+    if key.length() > BLOCK
+        k = sha256_bytes(key)
+    let out: List<Int> = []
+    var i = 0
+    while i < BLOCK
+        if i < k.length()
+            out.push(k[i] & 0xFF)
+        else
+            out.push(0x00)
+        i = i + 1
+    return out
+
+/// XOR every byte of a 64-byte block with a constant pad byte.
+fun xor_pad(block: List<Int>, pad: Int) -> List<Int>
+    let out: List<Int> = []
+    for byte in block
+        out.push((byte ^ pad) & 0xFF)
+    return out
+
+/// Concatenate two byte lists into a fresh list.
+fun concat(a: List<Int>, b: List<Int>) -> List<Int>
+    let out: List<Int> = []
+    for x in a
+        out.push(x)
+    for y in b
+        out.push(y)
+    return out
+
+/// HMAC-SHA256 of `message` under `key`, as 32 raw bytes.
+/// BYTE CONTRACT: each element of `key` and `message` must be in
+/// 0..255. Out-of-range elements are silently masked to 8 bits
+/// (`& 0xFF`: 256 -> 0, -1 -> 255), with no error, identically on
+/// both backends. For text, prefer the `_utf8` wrapper or
+/// `String.bytes()`, which are always in range.
+pub fun hmac_sha256_bytes(key: List<Int>, message: List<Int>) -> List<Int>
+    let k0 = key_block(key)
+    let inner = sha256_bytes(concat(xor_pad(k0, 0x36), message))
+    return sha256_bytes(concat(xor_pad(k0, 0x5c), inner))
+
+/// HMAC-SHA256 of `message` under `key`, as lowercase hex.
+/// BYTE CONTRACT: each element of `key` and `message` must be in
+/// 0..255; out-of-range elements are silently masked to 8 bits
+/// (`& 0xFF`), with no error, identically on both backends.
+pub fun hmac_sha256_hex(key: List<Int>, message: List<Int>) -> String
+    return to_hex(hmac_sha256_bytes(key, message))
+
+/// HMAC-SHA256 over the UTF-8 bytes of a String key and message, as
+/// lowercase hex.
+pub fun hmac_sha256_hex_utf8(key: String, message: String) -> String
+    return hmac_sha256_hex(key.bytes(), message.bytes())

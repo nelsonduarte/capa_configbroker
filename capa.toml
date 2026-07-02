@@ -1,0 +1,35 @@
+# capa_configbroker - package manifest.
+#
+# ConfigBroker is a capability-secured configuration / secret resolver
+# that PROVES, by construction, that fetched secrets cannot leak to logs,
+# telemetry or public output. The proof is the Capa compiler's
+# information-flow analysis plus the capability SBOM it emits for this
+# very program:
+#
+#   * the fetched secret VALUES are @secret; the compiler proves none of
+#     them can reach the audit log, the console, or a network sink
+#     without crossing the single audited declassify in resolve.capa.
+#
+#   * the Net capability is attenuated to a SINGLE upstream host; the
+#     SBOM records the restrict_to(host) so "this broker can reach only
+#     the one allowlisted upstream" is machine-checkable.
+#
+# One dependency, pure and capability-free, vendored under vendor/ and
+# wired as a PATH dependency so its parent (vendor/) joins the module
+# search path:
+#
+#   capa_hash - SHA-256, used for the audit-log integrity fingerprint
+#               (over PUBLIC audit text; no secret is hashed).
+#
+# The dependency holds no authority, so the ConfigBroker capability
+# surface stays exactly what configbroker.capa acquires: Stdio, Fs and
+# Net (attenuated to one host), nothing more. The compiler's
+# --manifest / --cyclonedx output proves it.
+
+[package]
+name = "capa_configbroker"
+version = "0.1.0"
+capa = ">=1.13.0"
+
+[dependencies.capa_hash]
+path = "vendor/capa_hash"

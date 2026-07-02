@@ -1,0 +1,97 @@
+// fetch.capa
+//
+// Secret acquisition, under an attenuated Net authority plus an
+// offline vault stand-in:
+//
+//   * net: Net, ALREADY restricted by main to the single allowlisted
+//     upstream host. Every get() call here is gated by that restriction
+//     BEFORE any system call, so a URL to any other host is denied
+//     without touching the network. The compiler records the
+//     restrict_to(host) in the manifest, so "this broker can reach only
+//     the one upstream" is a machine-checkable fact.
+//
+//   * vault_text: the already-read local vault fixture text (read by
+//     main through a read-only, data/-scoped Fs). It is the
+//     reproducible, offline stand-in: when the live upstream fetch fails
+//     (no network in CI, host down), the value is read from the local
+//     vault fixture instead. Either way the value is @secret. Passing
+//     the TEXT (not the Fs handle) keeps fetch.capa capability-free
+//     except for Net.
+//
+// REPRODUCIBILITY NOTE. A live network fetch is not reproducible and may
+// be blocked in CI. ConfigBroker therefore ATTEMPTS the upstream fetch
+// (proving the attenuation gate is real and the host ceiling holds) and,
+// on any transport failure, FALLS BACK to the local vault fixture. The
+// run is deterministic and offline; the attenuation proof is
+// compile-time (the manifest's restrict_to host) plus the runtime gate
+// (Net denies any other host with no syscall). See README "What runs
+// live vs offline".
+//
+// The URL passed to net.get is an INLINE string literal at each call
+// site so the --wasi static host ceiling resolves it by constant
+// propagation (a dynamic URL is fail-closed / rejected under --wasi).
+// The manifest below fixes each secret to its own literal-URL fetch fn.
+
+import domain
+import parse
+
+// Fetch DB_PASSWORD from the upstream, or fall back to the vault.
+// The URL is a literal so the --wasi host ceiling is statically known.
+pub fun fetch_db_password(net: Net, vault_text: String) -> ResolvedSecret
+    match net.get("http://config.internal.example/secrets/DB_PASSWORD")
+        Ok(body) -> return ResolvedSecret { name: "DB_PASSWORD", value: body, source: "upstream" }
+        Err(_)   -> return ResolvedSecret {
+            name: "DB_PASSWORD",
+            value: parse.vault_lookup(vault_text, "DB_PASSWORD"),
+            source: "vault-fallback"
+        }
+
+// Fetch API_TOKEN from the upstream, or fall back to the vault.
+pub fun fetch_api_token(net: Net, vault_text: String) -> ResolvedSecret
+    match net.get("http://config.internal.example/secrets/API_TOKEN")
+        Ok(body) -> return ResolvedSecret { name: "API_TOKEN", value: body, source: "upstream" }
+        Err(_)   -> return ResolvedSecret {
+            name: "API_TOKEN",
+            value: parse.vault_lookup(vault_text, "API_TOKEN"),
+            source: "vault-fallback"
+        }
+
+// Fetch SIGNING_KEY from the upstream, or fall back to the vault.
+pub fun fetch_signing_key(net: Net, vault_text: String) -> ResolvedSecret
+    match net.get("http://config.internal.example/secrets/SIGNING_KEY")
+        Ok(body) -> return ResolvedSecret { name: "SIGNING_KEY", value: body, source: "upstream" }
+        Err(_)   -> return ResolvedSecret {
+            name: "SIGNING_KEY",
+            value: parse.vault_lookup(vault_text, "SIGNING_KEY"),
+            source: "vault-fallback"
+        }
+
+// Resolve every secret named in the manifest. Each fetch is dispatched
+// to its own literal-URL fetch function by name so the --wasi host
+// ceiling stays statically resolvable (no dynamic URL). A manifest
+// entry naming a secret this broker does not know how to fetch is a
+// typed MissingSecret error rather than a silent gap.
+//
+// The RETURNED list carries @secret values (each ResolvedSecret.value
+// is @secret); the compiler tracks them from here to every sink.
+pub fun resolve_all(
+    net: Net,
+    vault_text: String,
+    entries: List<FetchEntry>
+) -> Result<List<ResolvedSecret>, ConfigError>
+    var out: List<ResolvedSecret> = []
+    for entry in entries
+        // Dispatch each manifest entry to its own literal-URL fetch
+        // function. A secret this broker does not know how to fetch is a
+        // typed MissingSecret error, never a silent gap.
+        if entry.name == "DB_PASSWORD"
+            out.push(fetch_db_password(net, vault_text))
+        else
+            if entry.name == "API_TOKEN"
+                out.push(fetch_api_token(net, vault_text))
+            else
+                if entry.name == "SIGNING_KEY"
+                    out.push(fetch_signing_key(net, vault_text))
+                else
+                    return Err(MissingSecret(entry.name))
+    return Ok(out)
