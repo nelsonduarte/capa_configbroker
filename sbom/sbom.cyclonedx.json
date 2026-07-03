@@ -10,7 +10,7 @@
         {
           "type": "application",
           "name": "capa",
-          "version": "1.13.0"
+          "version": "1.15.0"
         }
       ]
     },
@@ -18,7 +18,7 @@
       "bom-ref": "capa:program:configbroker.capa",
       "type": "application",
       "name": "configbroker.capa",
-      "version": "1.13.0",
+      "version": "1.15.0",
       "supplier": {
         "name": "capa-build"
       },
