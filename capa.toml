@@ -29,7 +29,7 @@
 [package]
 name = "capa_configbroker"
 version = "0.1.0"
-capa = ">=1.13.0"
+capa = ">=1.15.0"
 
 [dependencies.capa_hash]
 path = "vendor/capa_hash"
