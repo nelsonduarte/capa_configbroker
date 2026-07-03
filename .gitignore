@@ -14,7 +14,7 @@ Thumbs.db
 # Local probes
 _*.capa
 
-# NOTE: vendor/ is committed on purpose (path dependencies, no `capa
-# install` step needed), and out/ + sbom/ are committed as the sample
+# NOTE: vendor/ is committed on purpose (self-contained path
+# dependencies), and out/ + sbom/ are committed as the sample
 # report / attestation / SBOM artefacts the README references. Regenerate
 # them with ./generate.sh.
