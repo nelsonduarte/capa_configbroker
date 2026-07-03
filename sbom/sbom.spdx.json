@@ -7,14 +7,14 @@
   "creationInfo": {
     "created": "2026-01-01T00:00:00Z",
     "creators": [
-      "Tool: capa-1.15.0"
+      "Tool: capa-1.15.1"
     ]
   },
   "packages": [
     {
       "SPDXID": "SPDXRef-Package-configbroker.capa",
       "name": "configbroker.capa",
-      "versionInfo": "1.15.0",
+      "versionInfo": "1.15.1",
       "downloadLocation": "NOASSERTION",
       "filesAnalyzed": false,
       "licenseConcluded": "NOASSERTION",

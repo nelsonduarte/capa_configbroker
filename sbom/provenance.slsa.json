@@ -58,7 +58,7 @@
         "source": "configbroker.capa"
       },
       "internalParameters": {
-        "capaVersion": "1.15.0",
+        "capaVersion": "1.15.1",
         "target": "python>=3.10"
       },
       "resolvedDependencies": []
@@ -67,7 +67,7 @@
       "builder": {
         "id": "https://capa-language.com/cli",
         "version": {
-          "capa": "1.15.0"
+          "capa": "1.15.1"
         }
       },
       "metadata": {

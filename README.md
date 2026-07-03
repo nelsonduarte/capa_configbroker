@@ -245,7 +245,7 @@ unchanged.
 | `data/vault.tsv` | local vault fixture (fictitious secrets; the offline stand-in) |
 | `out/` | sample generated resolved config + audit log |
 | `sbom/` | sample generated manifest + SBOMs + provenance |
-| `vendor/capa_hash` | pure, capability-free path dependency (audit-log fingerprint) |
+| `capa_hash` (git dep) | pure, capability-free; fetched + GPG/SLSA-verified by `capa install` into `vendor/` (audit-log fingerprint) |
 
 ## Run it
 
@@ -253,6 +253,15 @@ All commands use the local Capa compiler; substitute `python -m capa` for
 `capa` if the installed `capa` is not the build you intend.
 
 ```sh
+# One-time: fetch + verify the git dependency (needs capa >= 1.15.1).
+# `capa install` clones capa_hash at its signed tag, verifies the tag's
+# GPG signature against the verify_key in capa.toml and its SLSA
+# provenance, writes capa.lock, and vendors the source under vendor/.
+# Import the publisher key first (see capa_hash's SECURITY.md). capa_hash
+# is pure and holds zero capabilities, so this adds a verified supply
+# chain without widening the {Stdio, Fs, Net} surface.
+capa install
+
 # Type-check + information-flow check (clean: no leaks)
 capa --check configbroker.capa
 
@@ -292,15 +301,33 @@ on the other backends.)
 
 ## Dependencies
 
-One dependency, **pure and capability-free**, vendored under `vendor/`
-and wired as a **path dependency** in `capa.toml`:
+One dependency, **pure and capability-free**, resolved as a **verified git
+dependency** in `capa.toml`:
 
 - `capa_hash` - SHA-256, for the audit-log integrity fingerprint (over
   public audit text; no secret is ever hashed).
 
-It holds no authority, so the ConfigBroker capability surface stays
-exactly `{Stdio, Fs, Net}` with `Net` attenuated to one host. The SBOM
-proves the dependency does not widen it.
+It is pinned to a **GPG-signed release tag** with the publisher's
+`verify_key`. `capa install` (needs `capa >= 1.15.1`) fetches it at that
+tag, verifies the tag's **GPG signature** against `verify_key` and its
+**SLSA build provenance** (via `gh attestation verify` against the public
+Sigstore log), records the resolved commit SHA in `capa.lock`, and vendors
+the source under `vendor/` (git-ignored, not committed). A force-pushed
+tag or a substituted commit is rejected before the code is ever compiled.
+
+```toml
+[dependencies.capa_hash]
+git = "https://github.com/nelsonduarte/capa_hash"
+tag = "v0.1.2"
+verify_key = "6C1D222D491FB88031E041A536CFB426101AA24B"
+```
+
+This is the verifiable supply chain Capa is about, made concrete: the
+dependency is **cryptographically verified at install time**, not trusted
+by convention, and its pinned, signed provenance is recorded in
+`capa.lock`. It holds no authority, so the ConfigBroker capability surface
+stays exactly `{Stdio, Fs, Net}` with `Net` attenuated to one host, and
+the SBOM proves it does not widen it.
 
 ## Licence
 

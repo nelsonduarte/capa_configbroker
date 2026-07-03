@@ -14,9 +14,11 @@
 #     SBOM records the restrict_to(host) so "this broker can reach only
 #     the one allowlisted upstream" is machine-checkable.
 #
-# One dependency, pure and capability-free, vendored under vendor/ and
-# wired as a PATH dependency so its parent (vendor/) joins the module
-# search path:
+# One dependency, pure and capability-free, resolved as a VERIFIED git
+# dependency. `capa install` fetches it at its GPG-signed tag, verifies
+# the tag signature against verify_key and its SLSA provenance, records
+# the pinned commit in capa.lock, and vendors it under vendor/ (git-
+# ignored):
 #
 #   capa_hash - SHA-256, used for the audit-log integrity fingerprint
 #               (over PUBLIC audit text; no secret is hashed).
@@ -29,7 +31,9 @@
 [package]
 name = "capa_configbroker"
 version = "0.1.0"
-capa = ">=1.15.0"
+capa = ">=1.15.1"
 
 [dependencies.capa_hash]
-path = "vendor/capa_hash"
+git = "https://github.com/nelsonduarte/capa_hash"
+tag = "v0.1.2"
+verify_key = "6C1D222D491FB88031E041A536CFB426101AA24B"
