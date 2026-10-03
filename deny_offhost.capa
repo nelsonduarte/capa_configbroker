@@ -2,10 +2,10 @@
 //
 // SECOND DEMONSTRATION: network attenuation, shown at runtime.
 //
-// Where leaky_configbroker.capa proves the information-flow guarantee
-// (secrets cannot reach a public sink) as a COMPILE-TIME error, this file
-// proves the NETWORK-ATTENUATION guarantee (the broker can reach only the
-// one allowlisted upstream host) as a RUNTIME fact you can watch happen.
+// Where leaky_configbroker.capa shows the information-flow check (a
+// detected secret-to-sink flow under @strict_ifc) as a COMPILE-TIME error,
+// this file shows the NETWORK-ATTENUATION check (a request addressed to a
+// host other than the allowlisted one is refused) as a RUNTIME fact.
 //
 // The Net capability is restricted to the single upstream host. When the
 // broker then tries to reach ANY other host, the capability's gate denies
@@ -13,8 +13,8 @@
 // packet. The denied attempt returns a typed Err with the current
 // restriction set, and NOTHING leaves the machine.
 //
-// This is the machine-checkable half of "provably cannot exfiltrate to a
-// second host". The other half is the SBOM: capa --manifest records the
+// This is the runtime half of the network attenuation: a request to a
+// second host is refused. The other half is the SBOM: capa --manifest records the
 // restrict_to("config.internal.example"), so an auditor sees the single
 // allowlisted host without running anything.
 //

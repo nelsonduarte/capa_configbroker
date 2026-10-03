@@ -15,24 +15,24 @@
 // Capability discipline. main acquires exactly three capabilities,
 // Stdio, Fs and Net, and immediately attenuates two of them:
 //
-//   * Net is restricted to the SINGLE allowlisted upstream host. Every
-//     get() is gated by that restriction before any syscall, so the
-//     broker provably cannot reach any other host. The SBOM records the
+//   * Net is restricted to the SINGLE allowlisted upstream host. A
+//     get() addressed to any other host is refused by that restriction
+//     before it is made (deny_offhost.capa). The SBOM records the
 //     restrict_to(host).
 //
 //   * Fs is split into a READ-ONLY view over data/ (manifest, template,
 //     vault) and a WRITE view over out/ (resolved config + audit log).
-//     Neither view can touch the other's directory.
+//     The runtime refuses a path outside each view's prefix.
 //
-// Note what main never acquires: Env, Proc, Db, Clock, Random, Unsafe.
-// The capability SBOM proves it. So "this broker cannot shell out, read
-// arbitrary env, or reach a second host" is a machine-checked fact.
+// Note what main does not declare: Env, Proc, Db, Clock, Random, Unsafe.
+// Its manifest entry lists them among the excluded capabilities, and the
+// compiler refuses a call on one of them in a function without it in scope.
 //
-// The information-flow guarantee is orthogonal and just as strong: each
-// fetched secret's value is @secret, so the compiler proves it cannot
-// reach the audit log, the console, or a telemetry sink without crossing
-// the single audited declassify in resolve.capa. leaky_configbroker.capa
-// shows the compiler rejecting a deliberate breach of exactly that rule.
+// The information-flow check is orthogonal: each fetched secret's value
+// is @secret, and the compiler reports a flow it detects from it to the
+// audit log, the console, or a telemetry sink that does not cross the
+// single audited declassify in resolve.capa (a warning here, a hard error
+// under @strict_ifc). leaky_configbroker.capa shows the strict rejection.
 //
 // Paths and the upstream host are string literals at their sinks, so the
 // compiler fixes the filesystem authority and the Net host ceiling at

@@ -12,8 +12,8 @@
 # The resolved config and the audit log are produced by RUNNING
 # ConfigBroker; the SBOM family is EMITTED BY THE COMPILER from the same
 # source. Together they are the attestation: the program states the claim
-# (no secret leaks; only the allowlisted host is reachable), the compiler
-# proves it (information-flow analysis + the capability surface, including
+# (no secret leaks; requests go only to the allowlisted host), the compiler
+# checks it (information-flow analysis + the capability surface, including
 # the Net restrict_to host, in the SBOM).
 #
 # The run is REPRODUCIBLE and OFFLINE. ConfigBroker attempts the upstream
@@ -24,7 +24,8 @@
 #
 # Determinism of the SBOMs comes from SOURCE_DATE_EPOCH
 # (reproducible-builds.org): the compiler stamps the SBOM build time from
-# this fixed instant, so the artefacts are byte-reproducible. Bump it by
+# this fixed instant. The compiler's tests pin byte-identical output for
+# repeated runs; a rebuild-and-diff is a check to run, not a guarantee. Bump it by
 # writing a new UTC epoch to sbom/SOURCE_DATE_EPOCH and rerunning.
 #
 # Run all Capa invocations through the LOCAL compiler:

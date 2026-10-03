@@ -12,10 +12,10 @@
 //
 //   * value: the secret material fetched from the upstream vault. This
 //     is @secret. From that single annotation the compiler propagates a
-//     confidentiality label through every value derived from it and
-//     proves it cannot reach a public sink (a log line, the audit file,
-//     a telemetry POST, the console) without crossing an audited
-//     declassify.
+//     confidentiality label through the values derived from it that it
+//     tracks, and reports a flow it detects to a public sink (a log line,
+//     the audit file, a telemetry POST, the console) that does not cross
+//     an audited declassify.
 //
 // The design is that split: the KEY is public, the VALUE is secret. The
 // audit log is built exclusively from public data (keys, counts, source

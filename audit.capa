@@ -1,6 +1,6 @@
 // audit.capa
 //
-// The audit log builder. This is the module the whole guarantee is
+// The audit log builder. This is the module the audit property is
 // about: the audit trail records WHAT the broker did (which secrets it
 // resolved, from where, into which slots) WITHOUT recording any secret
 // VALUE. It is built exclusively from public data:
@@ -28,7 +28,7 @@ fun audit_line(s: ResolvedSecret) -> String
     return "resolved secret ${s.name} from ${s.source}"
 
 // Build the audit log body from the resolved set and the run metadata.
-// Everything here is public; the compiler proves no secret reaches it.
+// Everything here is public; the compiler reports a secret it detects reaching it.
 pub fun build_audit(
     allowed_host: String,
     slot_count: Int,
