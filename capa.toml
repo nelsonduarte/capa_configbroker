@@ -1,20 +1,19 @@
 # capa_configbroker - package manifest.
 #
 # ConfigBroker is a capability-secured configuration / secret resolver
-# that PROVES, by construction, that fetched secrets cannot leak to logs,
-# telemetry or public output. The proof is the Capa compiler's
-# information-flow analysis plus the capability SBOM it emits for this
-# very program:
+# that puts fetched secrets under the Capa compiler's information-flow
+# check against logs, telemetry and public output. The evidence is that
+# check plus the capability SBOM the compiler emits for this very
+# program:
 #
-#   * the fetched secret VALUES are @secret; the compiler proves none of
-#     them can reach the audit log, the console, or a network sink
-#     without crossing the single audited declassify in resolve.capa.
+#   * the fetched secret VALUES are @secret; the compiler reports a flow
+#     it detects to the audit log, the console, or a network sink that
+#     does not cross the single audited declassify in resolve.capa.
 #
-#   * the Net capability is attenuated to a SINGLE upstream host; the
-#     SBOM records the restrict_to(host) so "this broker can reach only
-#     the one allowlisted upstream" is machine-checkable.
+#   * the Net capability is attenuated to a SINGLE upstream host, checked
+#     at runtime; the SBOM records the restrict_to(host) call.
 #
-# One dependency, pure and capability-free, resolved as a VERIFIED git
+# One dependency, capability-free, resolved as a VERIFIED git
 # dependency. `capa install` fetches it at its GPG-signed tag, verifies
 # the tag signature against verify_key and its SLSA provenance, records
 # the pinned commit in capa.lock, and vendors it under vendor/ (git-
@@ -24,9 +23,9 @@
 #               (over PUBLIC audit text; no secret is hashed).
 #
 # The dependency holds no authority, so the ConfigBroker capability
-# surface stays exactly what configbroker.capa acquires: Stdio, Fs and
-# Net (attenuated to one host), nothing more. The compiler's
-# --manifest / --cyclonedx output proves it.
+# surface stays what configbroker.capa acquires: Stdio, Fs and Net
+# (attenuated to one host). The compiler's --manifest / --cyclonedx
+# output records it.
 
 [package]
 name = "capa_configbroker"

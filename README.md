@@ -1,15 +1,15 @@
 # ConfigBroker
 
-A capability-secured configuration and secret resolver that **proves, by
-construction, that fetched secrets cannot leak to logs, telemetry or
-public output, and that the broker can reach only one allowlisted
-upstream host**. Neither guarantee is a policy document or a code-review
-sign-off. Both are outputs of a compiler: the [Capa](https://github.com/nelsonduarte)
-information-flow analysis rejects any path from a secret value to a
-public sink, the Capa capability model gates the network to a single
-host, and the capability SBOM Capa emits for this program enumerates
-exactly where the one sanctioned disclosure happens and what authority
-the program holds.
+A capability-secured configuration and secret resolver that **puts
+fetched secrets under the compiler's information-flow check against
+logs, telemetry and public output, and narrows its `Net` to one
+allowlisted host name**. Neither is a policy document or a code-review
+sign-off. Both come from the [Capa](https://github.com/nelsonduarte)
+toolchain: the information-flow analysis reports a flow it detects from
+a secret value to a public sink, and reports none in this resolver; the
+`Net` capability is attenuated to a single host and checked at runtime;
+and the Capa manifest records where the one sanctioned disclosure
+happens and what authority the program holds.
 
 ## The problem
 
@@ -24,7 +24,6 @@ every one of them has the same two risks:
    added during debugging, a log formatter that serialises a whole
    struct, an error handler that echoes the request. Secret scanners and
    log redaction catch some of it, after the fact, by pattern-matching.
-   None of it is a *proof*.
 
 2. **The broker phones home.** A config resolver that can open arbitrary
    network connections can exfiltrate everything it holds to anywhere.
@@ -33,14 +32,14 @@ every one of them has the same two risks:
    reach a paste site or the cloud metadata endpoint, and nothing in the
    build fails.
 
-ConfigBroker shows a different model. Both properties, "no secret value
-reaches a log, the console or a telemetry sink" and "the network is
-reachable only at the one allowlisted host", are **compile-time and
-capability-time invariants**. If a developer writes the leak, the build
-stops. If the resolver reaches for a second host, the capability gate
-refuses it before a single packet leaves. The evidence that the shipped
-build upholds both is a machine-readable artefact an auditor can
-re-verify.
+ConfigBroker shows a different model. The rule "no secret value reaches
+a log, the console or a telemetry sink" is **checked at compile time**: a
+flow the analysis detects is reported, as a warning at the default tier
+this resolver uses and as a hard error in a function annotated
+`@strict_ifc()`, as in the counter-example below. The rule "only the one
+allowlisted host" is **checked at runtime by the attenuated `Net`**: a
+request to another host is refused before it is made. The record of the
+shipped build is a machine-readable artefact an auditor can regenerate.
 
 ## What ConfigBroker does
 
@@ -62,8 +61,8 @@ config template and a local vault, it:
    `out/`-scoped filesystem view: the **resolved config**
    (`out/resolved.env`, secrets in their authorised slots) and an
    **audit log** (`out/audit.log`, built from public data only, with a
-   SHA-256 integrity fingerprint). The audit log **cannot** contain a
-   secret value, and the compiler is what guarantees it.
+   SHA-256 integrity fingerprint). The information-flow check reports
+   no flow of a secret value into the audit log.
 
 ### The data model is the policy
 
@@ -77,20 +76,23 @@ pub type ResolvedSecret {
 
 The single `@secret` annotation on `value` is the entire confidentiality
 policy. From it the compiler propagates a security label through every
-derived value and proves it cannot reach a public sink (the audit log,
-the console, a telemetry POST, a URL) without crossing the one audited
-`declassify` in `resolve.capa`. There is nothing else to trust: no
-runtime redaction, no scanner, no reviewer's diligence.
+derived value and reports a flow it detects to a public sink (the audit
+log, the console, a telemetry POST, a URL) that does not cross the one
+audited `declassify` in `resolve.capa`. No runtime redaction or scanner
+is involved; the check is the compiler's, and it is not a proof that no
+secret reaches an output.
 
-## Why both guarantees are machine-verifiable
+## What the toolchain checks
 
-### 1. Information-flow control: the leak does not compile
+### 1. Information-flow control: the counter-example does not compile
 
-A `@secret` value that reaches a public sink without an audited
-`declassify` is a compile-time error. `leaky_configbroker.capa` is the
-counter-example that makes this concrete: it deliberately tries to leak
-the fetched secret through the four channels a real secret manager must
-defend against, and the compiler refuses all four:
+A `@secret` value the analysis finds reaching a public sink without an
+audited `declassify` is reported at compile time: a warning by default,
+and a hard error in a function annotated `@strict_ifc()`.
+`leaky_configbroker.capa` is the counter-example that makes this
+concrete: it deliberately tries to leak the fetched secret through the
+four channels a real secret manager must defend against, under
+`@strict_ifc()`, and the compiler refuses all four:
 
 ```
 $ python -m capa --check leaky_configbroker.capa
@@ -105,7 +107,7 @@ leaky_configbroker.capa:62:19: error: information-flow: a @secret value reaches
 leaky_configbroker.capa: 4 errors                     # exit code 1
 ```
 
-The real resolver (`configbroker.capa`) checks clean. The single
+The real resolver (`configbroker.capa`) checks clean, with no warning. The single
 legitimate secret-to-output crossing is the config materialisation, made
 explicit at one `declassify` with a reason in `resolve.capa`:
 
@@ -120,7 +122,7 @@ fun render_slot(slot_key: String, s: ResolvedSecret) -> String
     )
 ```
 
-### 2. Network attenuation: only the one host is reachable
+### 2. Network attenuation: requests to other hosts are refused
 
 `main` acquires a `Net` capability and immediately restricts it to a
 single host:
@@ -157,7 +159,7 @@ $ python -m capa --manifest configbroker.capa | grep -A3 attenuations
 ### 3. Capability discipline: the resolver holds nothing else
 
 `main` acquires exactly `Stdio`, `Fs` and `Net`, and never `Env`, `Proc`,
-`Db`, `Clock`, `Random` or `Unsafe`. The compiler proves it, the SBOM
+`Db`, `Clock`, `Random` or `Unsafe`. The compiler checks it, the SBOM
 records it:
 
 ```
@@ -177,9 +179,9 @@ facts, not promises.
 
 ### 4. The artefacts: config + audit log + SBOM
 
-`./generate.sh` produces, byte-reproducibly (pinned `SOURCE_DATE_EPOCH`):
+`./generate.sh` produces, with timestamps pinned by `SOURCE_DATE_EPOCH`:
 
-| Artefact | Emitted by | What it proves |
+| Artefact | Emitted by | What it shows |
 | --- | --- | --- |
 | `out/resolved.env` | running ConfigBroker | secrets landed only in their authorised slots |
 | `out/audit.log` | running ConfigBroker | the audit trail carries public data only, plus a SHA-256 fingerprint |
@@ -196,27 +198,27 @@ compiler's evidence.
 
 A live network fetch is not reproducible and may be blocked in CI, so the
 test must not depend on a live upstream. ConfigBroker is built so the
-**guarantee runs and verifies offline** while the fetch itself is a
-reproducible stand-in:
+**checks run offline** while the fetch itself is a reproducible
+stand-in:
 
-- The **attenuation proof is real and does not need the network.** The
+- The **attenuation check is real and does not need the network.** The
   `Net.restrict_to(host)` gate rejects every non-allowlisted host *before
   any syscall* (see `deny_offhost.capa`, which runs offline, exit 0), and
   the SBOM records the single allowlisted host at compile time.
-- The **information-flow proof is entirely compile-time.** It is the
+- The **information-flow check is entirely compile-time.** It is the
   output of `capa --check`; no network, no execution.
 - The **fetch itself falls back to a local vault fixture.** ConfigBroker
   attempts the upstream `Net.get` (exercising the gate); with no live
   upstream, it reads the value from `data/vault.tsv` instead. The
   fetched-vs-fallback provenance is recorded in the audit log
-  (`from vault-fallback`). Either way the value is `@secret` and the
-  non-leak guarantee holds. In a real deployment the upstream answers and
+  (`from vault-fallback`). Either way the value is `@secret` and under
+  the same check. In a real deployment the upstream answers and
   `source` reads `upstream`; the fixture is the deterministic offline
   path for the demo and CI.
 
-So: the fetch is **mocked/offline**; the two guarantees the program
-exists to make (non-leak of secrets, network attenuation to one host)
-are **real and machine-verified** every run.
+So: the fetch is **mocked/offline**; the two checks the program exists
+to show (the information-flow check on secrets, network attenuation to
+one host) are **real and run** every time.
 
 ### A note on servers
 
@@ -225,15 +227,15 @@ Capa toolchain today; the network surface is an outgoing client (`Net`).
 ConfigBroker is therefore a **resolver / CLI**, not a service. Turning it
 into a long-running broker that answers config requests over an incoming
 handler is a natural extension the moment Capa grows an incoming-request
-surface; the non-leak and attenuation machinery would carry over
-unchanged.
+surface; the information-flow and attenuation checks would carry
+over.
 
 ## Layout
 
 | Path | Role |
 | --- | --- |
 | `domain.capa` | the typed data model; the `@secret` annotation that is the policy |
-| `parse.capa` | pure parsers for the manifest, template and vault (no capabilities) |
+| `parse.capa` | parsers for the manifest, template and vault (no capabilities) |
 | `fetch.capa` | secret acquisition: `Net` attenuated to one host, offline vault fallback |
 | `resolve.capa` | the single audited `declassify` bridge (secret into its authorised slot) |
 | `audit.capa` | the audit log built from public data only, with a SHA-256 fingerprint |
@@ -245,7 +247,7 @@ unchanged.
 | `data/vault.tsv` | local vault fixture (fictitious secrets; the offline stand-in) |
 | `out/` | sample generated resolved config + audit log |
 | `sbom/` | sample generated manifest + SBOMs + provenance |
-| `capa_hash` (git dep) | pure, capability-free; fetched + GPG/SLSA-verified by `capa install` into `vendor/` (audit-log fingerprint) |
+| `capa_hash` (git dep) | capability-free; fetched + GPG/SLSA-verified by `capa install` into `vendor/` (audit-log fingerprint) |
 
 ## Run it
 
@@ -258,11 +260,11 @@ All commands use the local Capa compiler; substitute `python -m capa` for
 # GPG signature against the verify_key in capa.toml and its SLSA
 # provenance, writes capa.lock, and vendors the source under vendor/.
 # Import the publisher key first (see capa_hash's SECURITY.md). capa_hash
-# is pure and holds zero capabilities, so this adds a verified supply
-# chain without widening the {Stdio, Fs, Net} surface.
+# holds zero capabilities, so this adds a verified supply chain without
+# widening the {Stdio, Fs, Net} surface.
 capa install
 
-# Type-check + information-flow check (clean: no leaks)
+# Type-check + information-flow check (clean: no finding)
 capa --check configbroker.capa
 
 # Run the resolver. Writes out/resolved.env and out/audit.log.
@@ -301,7 +303,7 @@ on the other backends.)
 
 ## Dependencies
 
-One dependency, **pure and capability-free**, resolved as a **verified git
+One dependency, **capability-free**, resolved as a **verified git
 dependency** in `capa.toml`:
 
 - `capa_hash` - SHA-256, for the audit-log integrity fingerprint (over
@@ -326,8 +328,8 @@ This is the verifiable supply chain Capa is about, made concrete: the
 dependency is **cryptographically verified at install time**, not trusted
 by convention, and its pinned, signed provenance is recorded in
 `capa.lock`. It holds no authority, so the ConfigBroker capability surface
-stays exactly `{Stdio, Fs, Net}` with `Net` attenuated to one host, and
-the SBOM proves it does not widen it.
+stays `{Stdio, Fs, Net}` with `Net` attenuated to one host, and the SBOM
+shows it does not widen it.
 
 ## Licence
 
