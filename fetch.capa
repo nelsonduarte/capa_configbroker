@@ -4,11 +4,11 @@
 // offline vault stand-in:
 //
 //   * net: Net, ALREADY restricted by main to the single allowlisted
-//     upstream host. Every get() call here is gated by that restriction
-//     BEFORE any system call, so a URL to any other host is denied
-//     without touching the network. The compiler records the
-//     restrict_to(host) in the manifest, so "this broker can reach only
-//     the one upstream" is a machine-checkable fact.
+//     upstream host. A get() addressed to any other host is refused by
+//     that restriction before it is made (deny_offhost.capa shows the
+//     denial). The compiler records the restrict_to(host) call in the
+//     manifest, so an auditor sees the allowlisted host without running
+//     anything.
 //
 //   * vault_text: the already-read local vault fixture text (read by
 //     main through a read-only, data/-scoped Fs). It is the
@@ -20,11 +20,11 @@
 //
 // REPRODUCIBILITY NOTE. A live network fetch is not reproducible and may
 // be blocked in CI. ConfigBroker therefore ATTEMPTS the upstream fetch
-// (proving the attenuation gate is real and the host ceiling holds) and,
+// (exercising the attenuation gate) and,
 // on any transport failure, FALLS BACK to the local vault fixture. The
-// run is deterministic and offline; the attenuation proof is
+// run is deterministic and offline; the attenuation evidence is
 // compile-time (the manifest's restrict_to host) plus the runtime gate
-// (Net denies any other host with no syscall). See README "What runs
+// (Net refuses a request to any other host). See README "What runs
 // live vs offline".
 //
 // The URL passed to net.get is an INLINE string literal at each call

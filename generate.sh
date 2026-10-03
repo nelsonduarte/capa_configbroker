@@ -1,5 +1,5 @@
 #!/bin/sh
-# Regenerate the ConfigBroker machine-verifiable artefacts:
+# Regenerate the ConfigBroker machine-readable artefacts:
 #
 #   out/resolved.env          the resolved config (secrets in authorised slots)
 #   out/audit.log             the audit trail (PUBLIC data only, no secret values)
@@ -41,7 +41,7 @@ mkdir -p out sbom
 # Run the resolver (Python backend) to produce the config + audit log.
 capa --run configbroker.capa
 
-# Emit the compiler-side proof artefacts.
+# Emit the compiler-side artefacts.
 capa --manifest   configbroker.capa > sbom/manifest.json
 capa --cyclonedx  configbroker.capa > sbom/sbom.cyclonedx.json
 capa --spdx       configbroker.capa > sbom/sbom.spdx.json

@@ -7,8 +7,8 @@
 // downstream service cannot connect. Writing that value into the output
 // is therefore a deliberate DISCLOSURE, and the only sanctioned way to
 // make a disclosure in Capa is ``declassify`` with a recorded reason.
-// That reason is emitted into the capability SBOM as a
-// ``declassification_site``: a machine-checkable record of exactly
+// That reason is emitted into the capability manifest as a
+// ``declassifications`` entry: a machine-readable record of
 // where, and why, ConfigBroker materialises a secret into output.
 //
 // This is the ONE place a fetched secret is allowed to influence an
